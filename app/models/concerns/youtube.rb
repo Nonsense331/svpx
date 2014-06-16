@@ -23,7 +23,7 @@ class Youtube
       client.authorization.client_id = ENV["GOOGLE_CLIENT_ID"]
       client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
       client.authorization.scope = "http://gdata.youtube.com"
-      client.authorization.refresh_token = user.refresh_token
+      client.authorization.update_token!(refresh_token: @user.refresh_token) if @user.refresh_token
       if @auth_token
         client.authorization.update_token!(access_token: @auth_token)
       else
