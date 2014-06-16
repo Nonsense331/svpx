@@ -1,0 +1,1 @@
+Svpx::Application.config.secret_token = "86ed3f3e0042fa3df9a8f2b5d82f3a33394ff5ce5010e6147e9b0185e41f59bc02e56aedc0c658fde83053eed0d76325c98fb695096895c03ea1da3db2331bc6"

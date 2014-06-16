@@ -1,0 +1,9 @@
+%h1
+  My Subscriptions
+
+%div
+  =link_to "Update Subscriptions from Youtube", "/update_subscriptions"
+
+-current_user.channels.each do |channel|
+  %div
+    =channel.title

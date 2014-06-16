@@ -1,0 +1,9 @@
+/ locals: video
+%h4=video.channel.title
+.video{data: {youtube: video.youtube_id}}
+  .thumbnail=image_tag video.thumbnail
+  .description
+    =video.title
+    -if !video.series
+      %div=link_to "New series from this video", new_series_path(video_title: video.title)
+  .watched-link=link_to "Watched", watched_video_path(video)

@@ -1,0 +1,12 @@
+%h1 Create new Series
+=form_for @series do |f|
+  .row
+    =f.label :title
+    =f.text_field :title
+
+  .row
+    %p Enter the part of the title that will be the same for every video in the series.
+    =f.label :regex
+    =f.text_field :regex
+
+  =f.submit "Create"
