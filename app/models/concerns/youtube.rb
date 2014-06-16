@@ -27,6 +27,7 @@ class Youtube
       if @auth_token
         client.authorization.update_token!(access_token: @auth_token)
       else
+        client.authorization.grant_type = "refresh_token"
         client.authorization.fetch_access_token!
       end
 
