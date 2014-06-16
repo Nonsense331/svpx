@@ -7,8 +7,13 @@ class Series < ActiveRecord::Base
     videos.each do |video|
       if !lowest_video
         lowest_video = video
-      elsif Integer(video.title.scan(/\d+/).first) < Integer(lowest_video.title.scan(/\d+/).first)
-        lowest_video = video
+      else
+        if video.title.scan(/\d+/) && (Integer(video.title.scan(/\d+/).first) < Integer(lowest_video.title.scan(/\d+/).first))
+          lowest_video = video
+        elsif video.created_at < lowest_video.created_at
+          #this might be good enough for all videos honestly...
+          lowest_video = video
+        end
       end
     end
 

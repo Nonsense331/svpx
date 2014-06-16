@@ -1,7 +1,7 @@
 class SeriesController < ApplicationController
   def new
     @series = Series.new
-    if params[:video_title]
+    if params[:video_title] && params[:video_title].match(/(^.*?)\d/)
       @series.regex = params[:video_title].match(/(^.*?)\d/)[1]
     end
   end
