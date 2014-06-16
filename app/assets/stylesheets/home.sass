@@ -6,8 +6,10 @@
 .video-container
   float: left
   width: 33%
-  height: 210px
+  display: inline-block
   .video
+    width: 100%
+    display: inline-block
     cursor: pointer
     .thumbnail
       float: left
@@ -18,9 +20,11 @@
       float: left
       width: 70%
     .watched-link
+      display: inline-block
       a
         text-decoration: none
       clear: both
       float: left
+      border: 1px solid white
       &:hover
         border: 1px solid black
