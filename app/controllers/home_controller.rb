@@ -13,7 +13,9 @@ class HomeController < ApplicationController
       youtube = Youtube.new(current_user, session['auth_token'])
       youtube.update_activities
     end
-    @videos = current_user.videos.where(series_id: nil)
+
+    @series = current_user.series.order(:order)
+    @channels = current_user.channels.order(:order)
   end
 
   def channels

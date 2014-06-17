@@ -21,6 +21,8 @@ Svpx::Application.routes.draw do
     get :watched, on: :member
   end
 
+  resources :channels
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

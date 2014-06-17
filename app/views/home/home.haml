@@ -8,11 +8,12 @@
 %div
   =link_to "Create a new series", new_series_path
 .series
-  -current_user.series.each do |series|
-    .video-container
-      %h3=series.title
-      .remove-series-button=link_to "X", series_path(series), method: "DELETE"
-      .clear-div
+  -@series.each do |series|
+    .video-container{data: {id: series.id}}
+      .handle
+        .title=series.title
+        .remove-series-button=link_to "X", series_path(series), method: "DELETE"
+        .clear-div
       -if series.next_video
         =render partial: 'video', locals: {video: series.next_video}
       -else
@@ -21,12 +22,15 @@
 .clear-div
 %h2 Other Videos
 .channels
-  -current_user.channels.each do |channel|
+  -@channels.each do |channel|
     -if channel.videos.size > 0
-      .channel-container
-        %h4=channel.title
-        -channel.videos.where(series_id: nil, watched: false).each do |video|
-          =render partial: 'video', locals: {video: video}
+      .channel-container{data: {id: channel.id}}
+        .handle
+          .title=channel.title
+          .clear-div
+        .video-container
+          -channel.videos.where(series_id: nil, watched: false).order(:created_at).each do |video|
+            =render partial: 'video', locals: {video: video}
 
 %script
   new SVPX.HomePage();

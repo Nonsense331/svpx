@@ -5,4 +5,5 @@
     =video.title
     -if !video.series
       %div=link_to "New series from this video", new_series_path(video_title: video.title)
-  .watched-link=link_to "Watched", watched_video_path(video)
+  .clear-div
+  .watched-link=link_to "Mark as Watched", watched_video_path(video)

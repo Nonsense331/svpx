@@ -28,6 +28,18 @@ class SeriesController < ApplicationController
     redirect_to "/home"
   end
 
+  def update
+    series = Series.find(params[:id])
+    series.attributes = series_params
+    series.save!
+
+    respond_to do |format|
+      format.js do
+        render json: {success: true}
+      end
+    end
+  end
+
   def videos_from_regex
     @series = Series.new
     @series.user = current_user
@@ -41,6 +53,6 @@ class SeriesController < ApplicationController
   private
 
   def series_params
-    params[:series].permit(:title, :regex)
+    params.require(:series).permit(:title, :regex, :order)
   end
 end
