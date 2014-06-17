@@ -4,7 +4,7 @@ class Series < ActiveRecord::Base
 
   def next_video
     lowest_video = nil
-    videos.each do |video|
+    videos.where(watched: false).each do |video|
       if !lowest_video
         lowest_video = video
       else
