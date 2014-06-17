@@ -5,9 +5,13 @@ class HomeController < ApplicationController
   end
 
   def home
-    if !current_user.channels
+    if current_user.channels.empty?
       youtube = Youtube.new(current_user, session['auth_token'])
       youtube.update_subscriptions
+    end
+    if current_user.videos.empty?
+      youtube = Youtube.new(current_user, session['auth_token'])
+      youtube.update_activities
     end
     @videos = current_user.videos.where(series_id: nil)
   end
