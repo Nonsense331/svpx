@@ -27,7 +27,10 @@ class Series < ActiveRecord::Base
   end
 
   def update_videos
-    videos_from_regex.update_attributes!(series_id: self.id)
+    videos_from_regex.each do |video|
+      video.series = self
+      video.save!
+    end
   end
 
   def self.check_video(video)
