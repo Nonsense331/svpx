@@ -3,10 +3,14 @@
   font-size: 32px
   font-weight: bold
 
-.video-container
+.channel-container, .video-container
+  border: 1px solid black
   float: left
-  width: 33%
+  width: 30%
+  margin: 4px
+  padding: 4px
   display: inline-block
+  height: 190px
   .video
     width: 100%
     display: inline-block
@@ -28,3 +32,9 @@
       border: 1px solid white
       &:hover
         border: 1px solid black
+
+.channels, .series
+  margin-left: 5%
+.channel-container
+  height: 400px
+  overflow-y: scroll

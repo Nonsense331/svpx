@@ -7,20 +7,24 @@
 %h2 My Series
 %div
   =link_to "Create a new series", new_series_path
--current_user.series.each do |series|
-  .video-container
-    %h3=series.title
-    -if series.next_video
-      =render partial: 'video', locals: {video: series.next_video}
-    -else
-      You've watched all of this series so far!
+.series
+  -current_user.series.each do |series|
+    .video-container
+      %h3=series.title
+      -if series.next_video
+        =render partial: 'video', locals: {video: series.next_video}
+      -else
+        You've watched all of this series so far!
 
 %div{style:"clear: both;"}
 %h2 Other Videos
--current_user.channels.each do |channel|
-  -channel.videos.where(series_id: nil, watched: false).each do |video|
-    .video-container
-      =render partial: 'video', locals: {video: video}
+.channels
+  -current_user.channels.each do |channel|
+    -if channel.videos.size > 0
+      .channel-container
+        %h4=channel.title
+        -channel.videos.where(series_id: nil, watched: false).each do |video|
+          =render partial: 'video', locals: {video: video}
 
 %script
   new SVPX.HomePage();
