@@ -5,6 +5,10 @@ class HomeController < ApplicationController
   end
 
   def home
+    if !current_user.channels
+      youtube = Youtube.new(current_user, session['auth_token'])
+      youtube.update_subscriptions
+    end
     @videos = current_user.videos.where(series_id: nil)
   end
 

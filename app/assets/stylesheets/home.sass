@@ -3,6 +3,9 @@
   font-size: 32px
   font-weight: bold
 
+.clear-div
+  clear: both
+
 .channel-container, .video-container
   border: 1px solid black
   float: left
@@ -33,8 +36,22 @@
       &:hover
         border: 1px solid black
 
+.video-container
+  h3
+    float: left
+  .remove-series-button
+    float: right
+    cursor: pointer
+
 .channels, .series
   margin-left: 5%
 .channel-container
   height: 400px
   overflow-y: scroll
+
+.series-form
+  text-align: center
+.row
+  width: 100%
+  input
+    width: 40%

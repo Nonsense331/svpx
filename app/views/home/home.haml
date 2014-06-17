@@ -11,12 +11,14 @@
   -current_user.series.each do |series|
     .video-container
       %h3=series.title
+      .remove-series-button=link_to "X", series_path(series), method: "DELETE"
+      .clear-div
       -if series.next_video
         =render partial: 'video', locals: {video: series.next_video}
       -else
         You've watched all of this series so far!
 
-%div{style:"clear: both;"}
+.clear-div
 %h2 Other Videos
 .channels
   -current_user.channels.each do |channel|

@@ -13,7 +13,9 @@ Svpx::Application.routes.draw do
   get 'update_subscriptions', controller: 'home'
   get 'update_activities', controller: 'home'
 
-  resources :series
+  resources :series do
+    post :videos_from_regex, on: :collection
+  end
 
   resources :videos, except: [:new, :create, :edit, :update] do
     get :watched, on: :member

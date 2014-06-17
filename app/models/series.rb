@@ -20,13 +20,14 @@ class Series < ActiveRecord::Base
     lowest_video
   end
 
-  def update_videos
-    user.videos.where(watched: false, series_id: nil).each do |video|
-      if video.title =~ /#{Regexp.new(Regexp.quote(regex))}/
-        video.series = self
-        video.save!
-      end
+  def videos_from_regex
+    user.videos.where(watched: false, series_id: nil).select do |video|
+      video.title =~ /#{Regexp.new(Regexp.quote(regex))}/
     end
+  end
+
+  def update_videos
+    videos_from_regex.update_attributes!(series_id: self.id)
   end
 
   def self.check_video(video)
