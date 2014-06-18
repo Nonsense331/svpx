@@ -1,8 +1,8 @@
 require 'google/api_client'
 class Youtube
-  def initialize(user, auth_token=nil)
+  def initialize(user, auth_hash=nil)
     @user = user
-    @auth_token = auth_token
+    @auth_hash = auth_hash
   end
 
   def execute_api_call(method, params)
@@ -24,8 +24,9 @@ class Youtube
       client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
       client.authorization.scope = "http://gdata.youtube.com"
       client.authorization.update_token!(refresh_token: @user.refresh_token) if @user.refresh_token
-      if @auth_token
-        client.authorization.update_token!(access_token: @auth_token)
+      expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
+      if expires_at && expires_at > Time.now
+        client.authorization.update_token!(access_token: @auth_hash.credentials.token)
       else
         client.authorization.grant_type = "refresh_token"
         client.authorization.fetch_access_token!

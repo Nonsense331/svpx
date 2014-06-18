@@ -29,7 +29,7 @@
           .title=channel.title
           .clear-div
         .video-container
-          -channel.videos.where(series_id: nil, watched: false).order(:created_at).each do |video|
+          -channel.videos.where(series_id: nil, watched: false).order('created_at DESC').each do |video|
             =render partial: 'video', locals: {video: video}
 
 %script

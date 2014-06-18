@@ -6,11 +6,11 @@ class HomeController < ApplicationController
 
   def home
     if current_user.channels.empty?
-      youtube = Youtube.new(current_user, session['auth_token'])
+      youtube = Youtube.new(current_user, session['auth_hash'])
       youtube.update_subscriptions
     end
     if current_user.videos.empty?
-      youtube = Youtube.new(current_user, session['auth_token'])
+      youtube = Youtube.new(current_user, session['auth_hash'])
       youtube.update_activities
     end
 
@@ -22,7 +22,7 @@ class HomeController < ApplicationController
   end
 
   def update_subscriptions
-    youtube = Youtube.new(current_user, session['auth_token'])
+    youtube = Youtube.new(current_user, session['auth_hash'])
 
     youtube.update_subscriptions
     youtube.update_activities
@@ -31,7 +31,7 @@ class HomeController < ApplicationController
   end
 
   def update_activities
-    youtube = Youtube.new(current_user, session['auth_token'])
+    youtube = Youtube.new(current_user, session['auth_hash'])
 
     youtube.update_activities
 
