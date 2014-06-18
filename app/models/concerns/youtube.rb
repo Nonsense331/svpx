@@ -24,9 +24,11 @@ class Youtube
       client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
       client.authorization.scope = "http://gdata.youtube.com"
       client.authorization.update_token!(refresh_token: @user.refresh_token) if @user.refresh_token
-      expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
-      if expires_at && expires_at > Time.now
-        client.authorization.update_token!(access_token: @auth_hash.credentials.token)
+      if @auth_hash
+        expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
+        if expires_at && expires_at > Time.now
+          client.authorization.update_token!(access_token: @auth_hash.credentials.token)
+        end
       else
         client.authorization.grant_type = "refresh_token"
         client.authorization.fetch_access_token!
