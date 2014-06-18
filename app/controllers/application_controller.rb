@@ -23,8 +23,12 @@ class ApplicationController < ActionController::Base
 
   def ensure_authorization
     expires_at = Time.at(session["auth_hash"]["credentials"]["expires_at"]) rescue Time.now
-    if !current_user || (expires_at && expires_at < Time.now)
+    if !current_user
       redirect_to "/"
+    end
+    if expires_at && expires_at < Time.now
+      youtube = Youtube.new(current_user, session['auth_token'])
+      youtube.api_client
     end
   end
 end
