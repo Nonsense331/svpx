@@ -8,7 +8,7 @@
 %div
   =link_to "Create a new series", new_series_path
 .series
-  -@series.each do |series|
+  -@series.each_with_index do |series, index|
     .video-container{data: {id: series.id}}
       .handle
         .title=series.title
@@ -18,6 +18,8 @@
         =render partial: 'video', locals: {video: series.next_video}
       -else
         You've watched all of this series so far!
+    -if (index+1) % 3 == 0
+      .clear-div
 
 .clear-div
 %h2 Other Videos
