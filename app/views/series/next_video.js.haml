@@ -1,0 +1,4 @@
+-if @series.next_video
+  =render partial: 'home/video', locals: {video: @series.next_video}
+-else
+  You've watched all of this series so far!

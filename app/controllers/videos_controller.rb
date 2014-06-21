@@ -1,7 +1,12 @@
 class VideosController < ApplicationController
   def watched
-    Video.find(params[:id]).update_attributes!(watched: true)
+    video = Video.find(params[:id])
+    video.update_attributes!(watched: true)
 
-    redirect_to "/home"
+    respond_to do |format|
+      format.js do
+        render json: {success: true}
+      end
+    end
   end
 end

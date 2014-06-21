@@ -3,8 +3,8 @@ class SVPX.HomePage
     @initListeners()
 
   initListeners: ->
-    $('.video').click (e)->
-      if !$(e.target).is('a')
+    $('.video-container').on 'click', '.video', (e)->
+      if !$(e.target).is('a, .watched-link')
         window.open("http://www.youtube.com/watch?v=#{$(this).data('youtube')}", '_blank')
 
     $('.series').sortable
@@ -30,3 +30,18 @@ class SVPX.HomePage
             data:
               channel:
                 order: $el.index()
+
+    $('.video-container').on 'click', '.watched-link', (e)->
+      id = $(e.target).parent('.video').data('id')
+      $.ajax
+        url: "/videos/#{id}/watched"
+        dataType: 'json'
+        success: (data)->
+          $videoContainer = $(e.target).parent('.video').parent('.video-container')
+          seriesId = $videoContainer.data('id')
+          $(e.target).parent('.video').remove()
+          if seriesId
+            $.ajax
+              url: "/series/#{seriesId}/next_video"
+              complete: (response)->
+                $videoContainer.append(response.responseText)

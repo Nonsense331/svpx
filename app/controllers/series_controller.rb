@@ -50,6 +50,14 @@ class SeriesController < ApplicationController
     end
   end
 
+  def next_video
+    @series = Series.find(params[:id])
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def series_params

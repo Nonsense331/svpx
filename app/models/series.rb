@@ -21,7 +21,7 @@ class Series < ActiveRecord::Base
   end
 
   def videos_from_regex
-    user.videos.where(watched: false, series_id: nil).select do |video|
+    user.videos.where(series_id: nil).select do |video|
       video.title =~ /#{Regexp.new(Regexp.quote(regex))}/
     end
   end

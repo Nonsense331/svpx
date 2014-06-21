@@ -1,9 +1,9 @@
 / locals: video
-.video{data: {youtube: video.youtube_id}}
+.video{data: {youtube: video.youtube_id, id: video.id}}
   .thumbnail=image_tag video.thumbnail
   .description
     =video.title
     -if !video.series
       %div=link_to "New series from this video", new_series_path(video_title: video.title)
   .clear-div
-  .watched-link=link_to "Mark as Watched", watched_video_path(video)
+  .watched-link Mark as Watched
