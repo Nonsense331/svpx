@@ -8,10 +8,9 @@ class Series < ActiveRecord::Base
       if !lowest_video
         lowest_video = video
       else
-        if video.title.scan(/\d+/).first && (Integer(video.title.scan(/\d+/).first) < Integer(lowest_video.title.scan(/\d+/).first))
-          lowest_video = video
-        elsif video.created_at < lowest_video.created_at
-          #this might be good enough for all videos honestly...
+        # if video.title.scan(/\d+/).first && (Integer(video.title.scan(/\d+/).first) < Integer(lowest_video.title.scan(/\d+/).first))
+        #   lowest_video = video
+        if video.created_at < lowest_video.created_at
           lowest_video = video
         end
       end
@@ -22,7 +21,7 @@ class Series < ActiveRecord::Base
 
   def videos_from_regex
     user.videos.where(series_id: nil).select do |video|
-      video.title =~ /#{Regexp.new(Regexp.quote(regex))}/
+      video.title =~ Regexp.new(Regexp.quote(regex))
     end
   end
 
@@ -37,7 +36,7 @@ class Series < ActiveRecord::Base
     return if video.title.blank? || video.series_id
     Series.all.each do |series|
       next if series.regex.blank?
-      if video.title =~ /#{series.regex}/
+      if video.title =~ Regexp.new(Regexp.quote(series.regex))
         video.series = series
         video.save!
         break
