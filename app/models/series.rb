@@ -3,20 +3,7 @@ class Series < ActiveRecord::Base
   has_many :videos
 
   def next_video
-    lowest_video = nil
-    videos.where(watched: false).each do |video|
-      if !lowest_video
-        lowest_video = video
-      else
-        # if video.title.scan(/\d+/).first && (Integer(video.title.scan(/\d+/).first) < Integer(lowest_video.title.scan(/\d+/).first))
-        #   lowest_video = video
-        if video.created_at < lowest_video.created_at
-          lowest_video = video
-        end
-      end
-    end
-
-    lowest_video
+    videos.where(watched: false).order(:created_at).first
   end
 
   def videos_from_regex
