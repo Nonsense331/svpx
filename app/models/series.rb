@@ -21,7 +21,7 @@ class Series < ActiveRecord::Base
 
   def self.check_video(video)
     return if video.title.blank? || video.series_id
-    Series.all.each do |series|
+    Series.where(user_id: video.user_id).each do |series|
       next if series.regex.blank?
       if video.title =~ Regexp.new(Regexp.quote(series.regex))
         video.series = series
