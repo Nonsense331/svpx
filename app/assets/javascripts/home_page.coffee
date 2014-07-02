@@ -45,3 +45,7 @@ class SVPX.HomePage
               url: "/series/#{seriesId}/next_video"
               complete: (response)->
                 $videoContainer.append(response.responseText)
+
+    setTimeout ->
+      location.reload()
+    , 1000 * 5 * 60
