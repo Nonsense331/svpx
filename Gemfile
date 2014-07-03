@@ -19,6 +19,8 @@ gem 'google-api-client'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'newrelic_rpm'
+
 group :development do
   gem 'byebug'
 end
