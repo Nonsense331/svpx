@@ -14,8 +14,8 @@ class HomeController < ApplicationController
       youtube.update_activities
     end
 
-    @series = current_user.series.order(:order)
-    @channels = current_user.channels.order(:order)
+    @series = current_user.series.includes(:videos).order(:order)
+    @channels = current_user.channels.includes(:videos).order(:order)
   end
 
   def channels
