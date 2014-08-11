@@ -46,6 +46,10 @@ class SVPX.HomePage
               complete: (response)->
                 $videoContainer.append(response.responseText)
 
+    $('.channel-container').on 'click', '.handle', (e)->
+      channelId = $(e.target).closest('.channel-container').data('id')
+      window.location.replace("/channels/#{channelId}")
+
     setTimeout ->
       location.reload()
     , 1000 * 5 * 60
