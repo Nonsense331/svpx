@@ -23,7 +23,7 @@ class Series < ActiveRecord::Base
     return if video.title.blank? || video.series_id
     Series.where(user_id: video.user_id).each do |series|
       next if series.regex.blank?
-      if video.title =~ Regexp.new(Regexp.quote(series.regex))
+      if video.title =~ Regexp.new(series.regex)
         video.series = series
         video.save!
         break
