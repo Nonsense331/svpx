@@ -8,7 +8,7 @@ class Series < ActiveRecord::Base
 
   def videos_from_regex
     user.videos.where(series_id: nil).select do |video|
-      video.title =~ Regexp.new(Regexp.quote(regex))
+      video.title =~ Regexp.new(regex)
     end
   end
 
