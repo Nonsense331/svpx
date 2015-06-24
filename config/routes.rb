@@ -22,7 +22,10 @@ Svpx::Application.routes.draw do
     get :watched, on: :member
   end
 
-  resources :channels
+  resources :channels do
+    get :music, on: :member
+    get :random_video, on: :member
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
