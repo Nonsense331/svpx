@@ -6,6 +6,18 @@ class SVPX.ChannelMusicPage
     @yt2State = null
     google.setOnLoadCallback =>
       @makeVideoPlayer1(video)
+    $(window).on 'keydown', (ev) =>
+      if ev.keyCode == 32 #space
+        if @yt1State == YT.PlayerState.PLAYING
+          if @ytplayer1.getPlayerState() == YT.PlayerState.PLAYING
+            @ytplayer1.pauseVideo()
+          else
+            @ytplayer1.playVideo()
+        else if @yt2State == YT.PlayerState.PLAYING
+          if @ytplayer2.getPlayerState() == YT.PlayerState.PLAYING
+            @ytplayer2.pauseVideo()
+          else
+            @ytplayer2.playVideo()
 
   makeVideoPlayer1: (video) ->
     if !@ytPlayer1Loaded
