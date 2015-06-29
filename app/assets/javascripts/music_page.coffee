@@ -1,5 +1,5 @@
-class SVPX.ChannelMusicPage
-  constructor: (video, @channel_id)->
+class SVPX.MusicPage
+  constructor: (video)->
     @ytPlayer1Loaded = false
     @ytPlayer2Loaded = false
     @yt1State = null
@@ -38,7 +38,7 @@ class SVPX.ChannelMusicPage
             @ytplayer1.playVideo()
           'onError': (errorCode) =>
             $.ajax
-              url: "/channels/#{@channel_id}/random_video"
+              url: "/random_video"
               success: (data) =>
                 @makeVideoPlayer1(data.video)
           'onStateChange': (data) =>
@@ -54,7 +54,7 @@ class SVPX.ChannelMusicPage
                   @yt1State = state
                   if state == YT.PlayerState.PLAYING
                     $.ajax
-                      url: "/channels/#{@channel_id}/random_video"
+                      url: "/random_video"
                       success: (data) =>
                         @makeVideoPlayer2(data.video)
                   else if state == YT.PlayerState.ENDED
@@ -83,7 +83,7 @@ class SVPX.ChannelMusicPage
             @ytplayer2.playVideo()
           'onError': (errorCode) =>
             $.ajax
-              url: "/channels/#{@channel_id}/random_video"
+              url: "/random_video"
               success: (data) =>
                 @makeVideoPlayer2(data.video)
           'onStateChange': (data) =>
@@ -99,7 +99,7 @@ class SVPX.ChannelMusicPage
                   @yt2State = state
                   if state == YT.PlayerState.PLAYING
                     $.ajax
-                      url: "/channels/#{@channel_id}/random_video"
+                      url: "/random_video"
                       success: (data) =>
                         @makeVideoPlayer1(data.video)
                   else if state == YT.PlayerState.ENDED

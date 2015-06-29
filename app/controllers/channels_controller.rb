@@ -18,24 +18,12 @@ class ChannelsController < ApplicationController
       series = Series.new
       series.user = current_user
       if video.title.match(/(^.*?)\d/)
-        series.regex = video.title.match(/(^.*?)\d/)[1].gsub('(', '')
+        series.regex = video.title.match(/(^.*?)\d/)[1].gsub(/[\[\]\(\)]/, '')
         if series.videos_from_regex.count > 1 && !@series.collect(&:regex).include?(series.regex)
           @series << series
         end
       end
     end
-  end
-
-  def music
-    @channel = Channel.find(params[:id])
-    @video = @channel.videos.unwatched.sample
-  end
-
-  def random_video
-    channel = Channel.find(params[:id])
-    video = channel.videos.unwatched.sample
-
-    render json: {success: true, video: video.youtube_id}
   end
 
   def get_all_videos
@@ -50,6 +38,6 @@ class ChannelsController < ApplicationController
   private
 
   def channel_params
-    params.require(:channel).permit(:order)
+    params.require(:channel).permit(:order, :music)
   end
 end

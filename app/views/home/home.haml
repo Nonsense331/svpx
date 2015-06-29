@@ -7,6 +7,8 @@
 %h2 My Series
 %div
   =link_to "Create a new series", new_series_path
+%div
+  =link_to "Start MUSIC MODE", music_path
 .series
   -@series.each_with_index do |series, index|
     .video-container{data: {id: series.id}}

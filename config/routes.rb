@@ -12,6 +12,8 @@ Svpx::Application.routes.draw do
   get 'channels', controller: 'home'
   get 'update_subscriptions', controller: 'home'
   get 'update_activities', controller: 'home'
+  get 'music', controller: 'home'
+  get 'random_video', controller: 'home'
 
   resources :series do
     post :videos_from_regex, on: :collection
@@ -23,8 +25,6 @@ Svpx::Application.routes.draw do
   end
 
   resources :channels do
-    get :music, on: :member
-    get :random_video, on: :member
     get :get_all_videos, on: :member
   end
 

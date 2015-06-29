@@ -37,4 +37,14 @@ class HomeController < ApplicationController
 
     redirect_to action: :home
   end
+
+  def music
+    @video = Video.joins(:channel).where(channels:{user_id: current_user.id, music: true}).sample
+  end
+
+  def random_video
+    video = Video.joins(:channel).where(channels:{user_id: current_user.id, music: true}).sample
+
+    render json: {success: true, video: video.youtube_id}
+  end
 end
