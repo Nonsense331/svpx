@@ -38,6 +38,15 @@ class ChannelsController < ApplicationController
     render json: {success: true, video: video.youtube_id}
   end
 
+  def get_all_videos
+    channel = Channel.find(params[:id])
+
+    youtube = Youtube.new(current_user, session['auth_hash'])
+    youtube.get_all_videos(channel)
+
+    redirect_to :show, notice: "Successfully updated all videos."
+  end
+
   private
 
   def channel_params

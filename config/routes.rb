@@ -25,6 +25,7 @@ Svpx::Application.routes.draw do
   resources :channels do
     get :music, on: :member
     get :random_video, on: :member
+    get :get_all_videos, on: :member
   end
 
   # Example of regular route:

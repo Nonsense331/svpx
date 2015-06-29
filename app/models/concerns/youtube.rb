@@ -95,4 +95,34 @@ class Youtube
     response = execute_api_call(api.subscriptions.list, parameters)
     JSON.parse response.body
   end
+
+  def get_all_videos(channel)
+    body = get_video_page(channel)
+    videos = body["items"]
+    nextPageToken = body["nextPageToken"]
+
+    while nextPageToken
+      body = get_video_page(channel, nextPageToken)
+      videos += body["items"]
+      nextPageToken = body["nextPageToken"]
+    end
+
+    videos.each do |item|
+      video = Video.where(user_id: @user.id, youtube_id: item["id"]["videoId"]).first_or_create
+    end
+  end
+
+  def get_video_page(channel, pageToken=nil)
+    parameters = {
+      'part' => 'snippet',
+      'channelId' => channel.youtube_id,
+      'maxResults' => 50,
+      'type' => 'video'
+    }
+    if pageToken
+      parameters['pageToken'] = pageToken
+    end
+    response = execute_api_call(api.search.list, parameters)
+    JSON.parse response.body
+  end
 end

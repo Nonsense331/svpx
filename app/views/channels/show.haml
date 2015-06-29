@@ -1,6 +1,8 @@
 %h2
   =@channel.title
+%div
   = link_to "Music Mode", music_channel_path(@channel)
+  = link_to "Get All Videos", get_all_videos_channel_path(@channel)
 -videos = @channel.videos.where(series_id: nil, watched: false).order('created_at DESC')
 -videos.each do |video|
   .video-container
