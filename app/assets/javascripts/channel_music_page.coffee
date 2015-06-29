@@ -7,6 +7,7 @@ class SVPX.ChannelMusicPage
     google.setOnLoadCallback =>
       @makeVideoPlayer1(video)
     $(window).on 'keydown', (ev) =>
+      ev.preventDefault()
       if ev.keyCode == 32 #space
         if @yt1State == YT.PlayerState.PLAYING
           if @ytplayer1.getPlayerState() == YT.PlayerState.PLAYING
@@ -35,7 +36,11 @@ class SVPX.ChannelMusicPage
           'onReady': =>
             @ytPlayer1Loaded = true
             @ytplayer1.playVideo()
-          'onError': (errorCode) -> alert("We are sorry, but the following error occured: " + errorCode)
+          'onError': (errorCode) =>
+            $.ajax
+              url: "/channels/#{@channel_id}/random_video"
+              success: (data) =>
+                @makeVideoPlayer1(data.video)
           'onStateChange': (data) =>
             state = data.data
             if @yt1State == YT.PlayerState.BUFFERING
@@ -76,7 +81,11 @@ class SVPX.ChannelMusicPage
           'onReady': =>
             @ytPlayer2Loaded = true
             @ytplayer2.playVideo()
-          'onError': (errorCode) -> alert("We are sorry, but the following error occured: " + errorCode)
+          'onError': (errorCode) =>
+            $.ajax
+              url: "/channels/#{@channel_id}/random_video"
+              success: (data) =>
+                @makeVideoPlayer2(data.video)
           'onStateChange': (data) =>
             state = data.data
             if @yt2State == YT.PlayerState.BUFFERING
