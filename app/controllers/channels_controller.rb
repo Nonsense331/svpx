@@ -18,7 +18,7 @@ class ChannelsController < ApplicationController
       series = Series.new
       series.user = current_user
       if video.title.match(/(^.*?)\d/)
-        series.regex = video.title.match(/(^.*?)\d/)[1]
+        series.regex = video.title.match(/(^.*?)\d/)[1].gsub('(', '')
         if series.videos_from_regex.count > 1 && !@series.collect(&:regex).include?(series.regex)
           @series << series
         end
@@ -44,7 +44,7 @@ class ChannelsController < ApplicationController
     youtube = Youtube.new(current_user, session['auth_hash'])
     youtube.get_all_videos(channel)
 
-    redirect_to :show, notice: "Successfully updated all videos."
+    redirect_to action: :show
   end
 
   private

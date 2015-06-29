@@ -109,6 +109,10 @@ class Youtube
 
     videos.each do |item|
       video = Video.where(user_id: @user.id, youtube_id: item["id"]["videoId"]).first_or_create
+      video.title = item["snippet"]["title"]
+      video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
+      video.channel = channel
+      video.save!
     end
   end
 

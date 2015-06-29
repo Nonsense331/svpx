@@ -8,7 +8,7 @@
   .video-container
     =render partial: 'home/video', locals: {video: video}
 
-%h2 Possible New Series
+%h2{style:"clear:both;"} Possible New Series
 -@series.each_with_index do |series, index|
   .video-container{data: {id: series.id}}
     .handle
