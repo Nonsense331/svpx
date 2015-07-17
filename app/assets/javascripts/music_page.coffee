@@ -12,7 +12,7 @@ class SVPX.MusicPage
       @makeVideoPlayer(video, 1)
     $(window).on 'keydown', @onKeyPress
 
-  @onKeyPress: (ev) =>
+  onKeyPress: (ev) =>
     ev.preventDefault()
     if ev.keyCode == 32 #space
       if @youtubeConfig["yt1State"] == YT.PlayerState.PLAYING
@@ -25,9 +25,11 @@ class SVPX.MusicPage
           @youtubeConfig["ytplayer2"].pauseVideo()
         else
           @youtubeConfig["ytplayer2"].playVideo()
+      else
+        @youtubeConfig["ytplayer1"].playVideo()
 
   makeVideoPlayer: (video, number) ->
-    othernumber = number == 1 ? 2 : 1
+    othernumber = if number == 1 then 2 else 1
     ytplayer = "ytplayer#{number}"
     otherytplayer = "ytplayer#{othernumber}"
     ytPlayerLoaded = "ytPlayer#{number}Loaded"
@@ -35,7 +37,7 @@ class SVPX.MusicPage
     ytState = "yt#{number}State"
     if !@youtubeConfig[ytPlayerLoaded]
       player_wrapper = $ytelement
-      player_wrapper.append('<div id="ytPlayer1"><p>Loading player...</p></div>')
+      player_wrapper.append('<div id="' + ytplayer + '"><p>Loading player...</p></div>')
 
       @youtubeConfig[ytplayer] = new YT.Player(ytplayer, {
         videoId: video
@@ -49,7 +51,6 @@ class SVPX.MusicPage
             @youtubeConfig[ytPlayerLoaded] = true
             @youtubeConfig[ytplayer].mute()
             @youtubeConfig[ytplayer].playVideo()
-            $($ytelement.get(0).contentWindow.document).on 'keydown', @onKeyPress
           'onError': (errorCode) =>
             $.ajax
               url: "/random_video"
