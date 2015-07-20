@@ -79,4 +79,5 @@ class SVPX.MusicPage
       })
     else
       @youtubeConfig[ytplayer].loadVideoById(video)
+      @youtubeConfig[ytplayer].mute()
       @youtubeConfig[ytplayer].playVideo()
