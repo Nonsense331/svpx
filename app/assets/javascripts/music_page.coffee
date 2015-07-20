@@ -13,8 +13,8 @@ class SVPX.MusicPage
     $(window).on 'keydown', @onKeyPress
 
   onKeyPress: (ev) =>
-    ev.preventDefault()
     if ev.keyCode == 32 #space
+      ev.preventDefault()
       if @youtubeConfig["yt1State"] == YT.PlayerState.PLAYING
         if @youtubeConfig["ytplayer1"].getPlayerState() == YT.PlayerState.PLAYING
           @youtubeConfig["ytplayer1"].pauseVideo()
