@@ -1,7 +1,7 @@
 .video-controls
   .button.skip Skip
   .button.hate Hate
-  .button.love Love
+  .button.love{class: "#{@video.love ? 'has-love' : ''}"} Love
 
 .clear-div
 #player-wrapper1.player

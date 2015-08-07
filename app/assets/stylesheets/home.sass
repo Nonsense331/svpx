@@ -1,7 +1,8 @@
 .svpx-header
-  text-align: center
+  cursor: pointer
   font-size: 32px
   font-weight: bold
+  text-align: center
 
 .clear-div
   clear: both
@@ -9,16 +10,16 @@
   line-height: 1px
 
 .channel-container, .video-container
-  float: left
   +box-sizing(border-box)
-  padding: 5px
   display: inline-block
+  float: left
+  padding: 5px
   width: 30%
   .handle
-    cursor: move
     background: #bababa
-    border: 1px solid #b4b4b4
     border-radius: 2px 2px 0 0
+    border: 1px solid #b4b4b4
+    cursor: move
     padding: 5px 5px 5px 10px
     .title
       color: #616161
@@ -30,9 +31,9 @@
       text-shadow: 0.5px 0.5px 0.5px #E0E0E0
   .video
     background: #dfdfdf
-    border: 1px solid #ccc
-    border-top: 0
     border-radius: 0 0 2px 2px
+    border-top: 0
+    border: 1px solid #ccc
     padding: 5px
     .thumbnail
       float: left
@@ -51,12 +52,12 @@
       background: #444
       border-radius: 2px
       color: #fff
+      cursor: pointer
       display: inline-block
       font-family: Tahoma, Arial, Sans-serif
       font-size: 14px
       line-height: 20px
       padding: 4px 7px 5px
-      cursor: pointer
 
 .video-container
   .handle
@@ -76,15 +77,15 @@
 .channels, .series
   margin-left: 5%
 .channel-container
-  height: 400px
-  border: 1px solid #999
   +box-shadow(0px 0px 4px #888)
+  border: 1px solid #999
+  height: 400px
   margin: 4px
   .video-container
-    width: 100%
+    display: block
     height: 345px
     overflow-y: scroll
-    display: block
+    width: 100%
 
 .series-form
   text-align: center
@@ -94,9 +95,9 @@
     width: 40%
 
 .player
+  display: none
   float: left
   padding: 8px
-  display: none
 
 .button
   border-radius: 2px
@@ -111,3 +112,6 @@
 .video-controls
   margin: auto
   width: 50%
+
+.love.has-love
+  background-color: pink

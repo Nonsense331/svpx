@@ -7,7 +7,9 @@ class SVPX.MusicPage
       yt1State: null,
       yt2State: null,
       ytplayer1: null,
-      ytplayer2: null
+      ytplayer2: null,
+      yt1love: false,
+      yt2love: false
     }
     google.setOnLoadCallback =>
       @makeVideoPlayer(video, 1)
@@ -21,6 +23,7 @@ class SVPX.MusicPage
       othernumber = if @currentNumber == 1 then 2 else 1
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
       return true
+
     $('.hate').on 'click', =>
       return if @currentNumber == 0
       $.ajax
@@ -29,6 +32,16 @@ class SVPX.MusicPage
           video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
       othernumber = if @currentNumber == 1 then 2 else 1
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
+      return true
+
+    $('.love').on 'click', =>
+      return if @currentNumber == 0
+      $.ajax
+        url: "/love_video"
+        data:
+          video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
+        success: ->
+          $('.love').toggleClass('has-love')
       return true
     return true
 
@@ -56,6 +69,8 @@ class SVPX.MusicPage
     ytPlayerLoaded = "ytPlayer#{number}Loaded"
     $ytelement = $("#player-wrapper#{number}")
     ytState = "yt#{number}State"
+    ytlove = "yt#{number}love"
+    ytotherlove = "yt#{othernumber}love"
     if @youtubeConfig[ytState] == YT.PlayerState.BUFFERING
       @youtubeConfig[ytplayer].pauseVideo()
       @youtubeConfig[ytplayer].unMute()
@@ -68,12 +83,14 @@ class SVPX.MusicPage
           @youtubeConfig[ytState] = state
           if state == YT.PlayerState.PLAYING
             @currentNumber = number
+            $('.love').toggleClass('has-love', @youtubeConfig[ytlove])
             $("#player-wrapper#{othernumber}").hide()
             $("#player-wrapper#{number}").show()
             $(window).focus()
             $.ajax
               url: "/random_video"
               success: (data) =>
+                @youtubeConfig[ytotherlove] = data.love
                 @makeVideoPlayer(data.video, othernumber)
           else if state == YT.PlayerState.ENDED
             @youtubeConfig[otherytplayer].playVideo()

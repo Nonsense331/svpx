@@ -45,12 +45,20 @@ class HomeController < ApplicationController
   def random_video
     video = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true}).sample
 
-    render json: {success: true, video: video.youtube_id}
+    render json: {success: true, video: video.youtube_id, love: video.love}
   end
 
   def hate_video
     video = Video.find_by_youtube_id(params[:video_id])
     video.watched = true
+    video.save!
+
+    render json: {success: true}
+  end
+
+  def love_video
+    video = Video.find_by_youtube_id(params[:video_id])
+    video.love = !video.love
     video.save!
 
     render json: {success: true}
