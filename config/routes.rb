@@ -14,6 +14,7 @@ Svpx::Application.routes.draw do
   get 'update_activities', controller: 'home'
   get 'music', controller: 'home'
   get 'random_video', controller: 'home'
+  get 'hate_video', controller: 'home'
 
   resources :series do
     post :videos_from_regex, on: :collection
