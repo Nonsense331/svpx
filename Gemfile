@@ -22,6 +22,10 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'newrelic_rpm'
 
+group :production do
+  gem 'rails_12factor'
+end
+
 group :development do
   gem 'byebug'
 end
