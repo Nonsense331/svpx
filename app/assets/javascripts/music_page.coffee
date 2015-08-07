@@ -70,7 +70,7 @@ class SVPX.MusicPage
             @currentNumber = number
             $("#player-wrapper#{othernumber}").hide()
             $("#player-wrapper#{number}").show()
-            $('.clear-div').focus()
+            $(window).focus()
             $.ajax
               url: "/random_video"
               success: (data) =>
