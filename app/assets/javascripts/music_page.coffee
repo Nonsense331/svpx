@@ -21,6 +21,7 @@ class SVPX.MusicPage
     $('.skip').on 'click', =>
       return if @currentNumber == 0
       othernumber = if @currentNumber == 1 then 2 else 1
+      @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
       return true
 
@@ -31,6 +32,7 @@ class SVPX.MusicPage
         data:
           video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
       othernumber = if @currentNumber == 1 then 2 else 1
+      @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
       return true
 
