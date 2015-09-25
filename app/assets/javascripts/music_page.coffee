@@ -23,6 +23,7 @@ class SVPX.MusicPage
       othernumber = if @currentNumber == 1 then 2 else 1
       @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
+      @incrementPlays()
       return true
 
     $('.hate').on 'click', =>
@@ -97,6 +98,7 @@ class SVPX.MusicPage
                 @makeVideoPlayer(data.video, othernumber)
           else if state == YT.PlayerState.ENDED
             @youtubeConfig[otherytplayer].playVideo()
+            @incrementPlays()
 
   makeVideoPlayer: (video, number) ->
     othernumber = if number == 1 then 2 else 1
