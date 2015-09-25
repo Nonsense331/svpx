@@ -1,11 +1,14 @@
-.video-controls
-  .button.skip Skip
-  .button.hate Hate
-  .button.love{class: "#{@video.love ? 'has-love' : ''}"} Love
+- if @video
+  .video-controls
+    .button.skip Skip
+    .button.hate Hate
+    .button.love{class: "#{@video.love ? 'has-love' : ''}"} Love
 
-.clear-div
-#player-wrapper1.player
-#player-wrapper2.player
+  .clear-div
+  #player-wrapper1.player
+  #player-wrapper2.player
 
-:javascript
-  new SVPX.MusicPage("#{@video.youtube_id}");
+  :javascript
+    new SVPX.MusicPage("#{@video.youtube_id}");
+- else
+  You don't have any music videos!

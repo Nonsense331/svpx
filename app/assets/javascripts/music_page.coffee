@@ -38,11 +38,12 @@ class SVPX.MusicPage
 
     $('.love').on 'click', =>
       return if @currentNumber == 0
+      $('.love').toggleClass('has-love')
       $.ajax
         url: "/love_video"
         data:
           video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
-        success: ->
+        failure: ->
           $('.love').toggleClass('has-love')
       return true
     return true
@@ -135,3 +136,9 @@ class SVPX.MusicPage
       @youtubeConfig[ytplayer].loadVideoById(video)
       @youtubeConfig[ytplayer].mute()
       @youtubeConfig[ytplayer].playVideo()
+
+  incrementPlays: () ->
+    $.ajax
+      url: "/increment_plays"
+      data:
+        video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id

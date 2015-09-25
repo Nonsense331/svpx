@@ -39,11 +39,11 @@ class HomeController < ApplicationController
   end
 
   def music
-    @video = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true}).sample
+    @video = get_random_video
   end
 
   def random_video
-    video = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true}).sample
+    video = get_random_video
 
     render json: {success: true, video: video.youtube_id, love: video.love}
   end
@@ -62,5 +62,20 @@ class HomeController < ApplicationController
     video.save!
 
     render json: {success: true}
+  end
+
+  def increment_plays
+    video = Video.find_by_youtube_id(params[:video_id])
+    video.plays ||= 0
+    video.plays += 1
+    video.save!
+
+    render json: {success: true}
+  end
+
+  private
+  def get_random_video
+    videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
+    videos.where(plays: videos.collect(&:plays).uniq.min).sample
   end
 end
