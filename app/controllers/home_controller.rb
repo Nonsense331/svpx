@@ -66,7 +66,6 @@ class HomeController < ApplicationController
 
   def increment_plays
     video = Video.find_by_youtube_id(params[:video_id])
-    video.plays ||= 0
     video.plays += 1
     video.save!
 

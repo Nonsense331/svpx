@@ -12,6 +12,7 @@ Svpx::Application.routes.draw do
   get 'random_video', controller: 'home'
   get 'hate_video', controller: 'home'
   get 'love_video', controller: 'home'
+  get 'increment_plays', controller: 'home'
 
   resources :series do
     post :videos_from_regex, on: :collection
