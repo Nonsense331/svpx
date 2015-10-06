@@ -52,6 +52,10 @@ class Youtube
           video.title = item["snippet"]["title"]
           video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
           video.channel = channel
+          if channel.music
+            max = channel.videos.maximum(:plays) || 1
+            video.plays = max - 1
+          end
           video.save!
 
           Series.check_video(video)

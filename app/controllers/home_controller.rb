@@ -75,6 +75,6 @@ class HomeController < ApplicationController
   private
   def get_random_video
     videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
-    videos.where(plays: videos.collect(&:plays).uniq.min).sample
+    videos.where(plays: videos.minimum(:plays)).sample
   end
 end
