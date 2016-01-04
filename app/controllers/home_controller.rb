@@ -45,7 +45,7 @@ class HomeController < ApplicationController
   def random_video
     video = get_random_video
 
-    render json: {success: true, video: video.youtube_id, love: video.love}
+    render json: {success: true, video: video.youtube_id, love: video.love, plays: video.plays}
   end
 
   def hate_video
