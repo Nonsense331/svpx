@@ -12,7 +12,7 @@ class ChannelsController < ApplicationController
   end
 
   def show
-    @channel = Channel.joins(:videos).includes(:videos).find(params[:id])
+    @channel = Channel.includes(:videos).find(params[:id])
   end
 
   def get_all_videos
