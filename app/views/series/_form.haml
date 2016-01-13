@@ -11,6 +11,11 @@
       =f.label :regex
       =f.text_field :regex
 
+    %p Channels
+    = collection_check_boxes :series, :channel_ids, current_user.channels, :id, :title do |b|
+      .row
+        = b.label { b.text + b.check_box }
+
     =f.submit "Create"
 
 

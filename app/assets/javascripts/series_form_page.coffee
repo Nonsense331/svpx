@@ -2,10 +2,15 @@ class SVPX.SeriesFormPage
   constructor: ->
     @initListeners()
     if $("#series_regex").val()
-      @onRegexChange()
+      @loadVideos()
 
   initListeners: ->
-    $('#series_regex').on 'keyup', @onRegexChange
+    $('#series_regex').on 'keyup', @loadVideos
+    $('input[type=checkbox]').on 'change', @loadVideos
 
-  onRegexChange: ->
-    $('.series').load("/series/videos_from_regex", regex: $('#series_regex').val())
+  loadVideos: ->
+    checkboxValues = $('input[type=checkbox]:checked').map ->
+      return this.value
+    .get().join(",")
+    regex = $('#series_regex').val()
+    $('.series').load("/series/videos_from_regex", regex: regex, channel_ids: checkboxValues)

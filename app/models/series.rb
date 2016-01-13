@@ -1,13 +1,20 @@
 class Series < ActiveRecord::Base
   belongs_to :user
   has_many :videos
+  has_many :series_channels
+  has_many :channels, through: :series_channels
 
   def next_video
     videos.where(watched: false).order(:created_at).first
   end
 
   def videos_from_regex
-    user.videos.where(series_id: nil).select do |video|
+    if channels.any?
+      user_videos = user.videos.where(channel_id: channel_ids)
+    else
+      user_videos = user.videos
+    end
+    user_videos.where(series_id: nil).select do |video|
       video.title =~ Regexp.new(regex)
     end
   end
@@ -23,6 +30,7 @@ class Series < ActiveRecord::Base
     return if video.title.blank? || video.series_id
     Series.where(user_id: video.user_id).each do |series|
       next if series.regex.blank?
+      next if series.channels.any? && series.channels.include?(video.channel)
       if video.title =~ Regexp.new(series.regex)
         video.series = series
         video.save!

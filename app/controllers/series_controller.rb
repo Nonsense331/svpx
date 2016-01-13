@@ -44,6 +44,7 @@ class SeriesController < ApplicationController
     @series = Series.new
     @series.user = current_user
     @series.regex = params[:regex]
+    @series.channel_ids = params[:channel_ids].split(',')
 
     respond_to do |format|
       format.js
@@ -62,6 +63,6 @@ class SeriesController < ApplicationController
   private
 
   def series_params
-    params.require(:series).permit(:title, :regex, :order)
+    params.require(:series).permit(:title, :regex, :order, {channel_ids: []})
   end
 end
