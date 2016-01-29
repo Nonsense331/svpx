@@ -15,7 +15,7 @@ gem 'compass-rails'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
-gem 'google-api-client'
+gem 'google-api-client', '0.8.2', require: 'google/api_client'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
