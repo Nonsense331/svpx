@@ -2,13 +2,13 @@ source 'https://rubygems.org'
 ruby '2.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.0'
+gem 'rails', '4.2.5.1'
 
 gem 'pg'
 gem 'puma'
-gem 'sass-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.0.0'
+gem 'sass-rails'
+gem 'uglifier'
+gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass-rails'
@@ -18,7 +18,7 @@ gem 'omniauth-google-oauth2'
 gem 'google-api-client'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 gem 'newrelic_rpm'
 
@@ -27,5 +27,5 @@ group :production do
 end
 
 group :development do
-  gem 'byebug'
+  gem 'pry'
 end

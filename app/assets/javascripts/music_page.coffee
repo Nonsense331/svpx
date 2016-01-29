@@ -131,6 +131,10 @@ class SVPX.MusicPage
             @youtubeConfig[ytplayer].playVideo()
           'onError': (errorCode) =>
             $.ajax
+              url: "/hate_video"
+              data:
+                video_id: video
+            $.ajax
               url: "/random_video"
               success: (data) =>
                 @makeVideoPlayer(data.video, number)
