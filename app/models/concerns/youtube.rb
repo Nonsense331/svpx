@@ -47,7 +47,7 @@ class Youtube
       response = execute_api_call(api.activities.list, {'part' => 'contentDetails, snippet', 'channelId' => channel.youtube_id})
       body = JSON.parse response.body
       body["items"].each do |item|
-        if item["contentDetails"]["upload"]
+        if item["contentDetails"] && item["contentDetails"]["upload"]
           video = Video.where(youtube_id: item["contentDetails"]["upload"]["videoId"], user_id: @user.id).first_or_create
           video.title = item["snippet"]["title"]
           video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
