@@ -4,6 +4,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       :scope => "email, http://gdata.youtube.com",
       # :prompt => "consent",
       :image_aspect_ratio => "square",
-      :image_size => 50
+      :image_size => 50,
+      :skip_jwt => true
     }
 end

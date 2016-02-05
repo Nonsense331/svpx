@@ -43,7 +43,7 @@ class HomeController < ApplicationController
   end
 
   def random_video
-    video = get_random_video
+    video = get_random_video(params[:video_id])
 
     render json: {success: true, video: video.youtube_id, love: video.love, plays: video.plays}
   end
@@ -73,8 +73,16 @@ class HomeController < ApplicationController
   end
 
   private
-  def get_random_video
+  def get_random_video(youtube_id=nil)
     videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
-    videos.where(plays: videos.minimum(:plays)).sample
+    if youtube_id
+      videos = videos.where("videos.youtube_id != ?", youtube_id)
+    end
+    min_plays = videos.where(plays: videos.minimum(:plays))
+    if min_plays.count > 0
+      min_plays.sample
+    else
+      videos.where(plays: videos.minimum(:plays)+1).sample
+    end
   end
 end

@@ -11,7 +11,9 @@ class SVPX.MusicPage
       yt1love: false,
       yt2love: false,
       yt1plays: 0,
-      yt2plays: 0
+      yt2plays: 0,
+      yt1video: null,
+      yt2video: null
     }
     google.setOnLoadCallback =>
       @makeVideoPlayer(video, 1)
@@ -33,7 +35,7 @@ class SVPX.MusicPage
       $.ajax
         url: "/hate_video"
         data:
-          video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
+          video_id: @youtubeConfig["yt#{@currentNumber}video"]
       othernumber = if @currentNumber == 1 then 2 else 1
       @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
       @youtubeConfig["ytplayer#{othernumber}"].playVideo()
@@ -45,7 +47,7 @@ class SVPX.MusicPage
       $.ajax
         url: "/love_video"
         data:
-          video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
+          video_id: @youtubeConfig["yt#{@currentNumber}video"]
         failure: ->
           $('.love').toggleClass('has-love')
       return true
@@ -79,6 +81,7 @@ class SVPX.MusicPage
     ytotherlove = "yt#{othernumber}love"
     ytplays = "yt#{number}plays"
     ytotherplays = "yt#{othernumber}plays"
+    ytvideo = "yt#{number}video"
     if @youtubeConfig[ytState] == YT.PlayerState.BUFFERING
       @youtubeConfig[ytplayer].pauseVideo()
       @youtubeConfig[ytplayer].unMute()
@@ -98,6 +101,8 @@ class SVPX.MusicPage
             $(window).focus()
             $.ajax
               url: "/random_video"
+              data:
+                video_id: @youtubeConfig[ytvideo]
               success: (data) =>
                 @youtubeConfig[ytotherlove] = data.love
                 @youtubeConfig[ytotherplays] = data.plays
@@ -113,6 +118,8 @@ class SVPX.MusicPage
     ytPlayerLoaded = "ytPlayer#{number}Loaded"
     $ytelement = $("#player-wrapper#{number}")
     ytState = "yt#{number}State"
+    ytvideo = "yt#{number}video"
+    @youtubeConfig[ytvideo] = video
     if !@youtubeConfig[ytPlayerLoaded]
       player_wrapper = $ytelement
       player_wrapper.append('<div id="' + ytplayer + '"><p>Loading player...</p></div>')
@@ -153,4 +160,4 @@ class SVPX.MusicPage
     $.ajax
       url: "/increment_plays"
       data:
-        video_id: @youtubeConfig["ytplayer#{@currentNumber}"].getVideoData().video_id
+        video_id: @youtubeConfig["yt#{@currentNumber}video"]
