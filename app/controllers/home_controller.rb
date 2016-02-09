@@ -80,9 +80,9 @@ class HomeController < ApplicationController
     end
     min_plays = videos.where(plays: videos.minimum(:plays))
     if min_plays.count > 0
-      min_plays.sample
+      return min_plays.sample
     else
-      videos.where(plays: videos.minimum(:plays)+1).sample
+      return videos.where(plays: videos.minimum(:plays)+1).sample
     end
   end
 end

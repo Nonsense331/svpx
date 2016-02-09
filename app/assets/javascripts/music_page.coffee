@@ -140,11 +140,9 @@ class SVPX.MusicPage
             $.ajax
               url: "/hate_video"
               data:
-                video_id: video
+                video_id: @youtubeConfig[ytvideo]
             $.ajax
               url: "/random_video"
-              data:
-                video_id: video
               success: (data) =>
                 @makeVideoPlayer(data.video, number)
           'onStateChange': (data) =>
