@@ -143,6 +143,8 @@ class SVPX.MusicPage
                 video_id: video
             $.ajax
               url: "/random_video"
+              data:
+                video_id: video
               success: (data) =>
                 @makeVideoPlayer(data.video, number)
           'onStateChange': (data) =>
