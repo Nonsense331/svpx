@@ -130,6 +130,8 @@ class SVPX.MusicPage
           wmode: 'opaque'
           autoplay: 0
           modestbranding: 1
+          fs: 0
+          allowfullscreen: false
         }
         events: {
           'onReady': =>
