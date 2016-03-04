@@ -12,9 +12,10 @@
       =f.text_field :regex
 
     %p Channels
-    = collection_check_boxes :series, :channel_ids, current_user.channels, :id, :title do |b|
-      .row
-        = b.label { b.text + b.check_box }
+    .channels
+      = collection_check_boxes :series, :channel_ids, current_user.channels, :id, :title do |b|
+        .row{style: "display: none;", data: {id: b.value}}
+          = b.label { b.text + b.check_box }
 
     =f.submit "Create"
 

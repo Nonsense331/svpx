@@ -19,6 +19,14 @@ class Series < ActiveRecord::Base
     end
   end
 
+  def channels_from_regex
+    videos = user.videos.where(series_id: nil).select do |video|
+      video.title =~ Regexp.new(regex)
+    end
+
+    videos.collect(&:channel).uniq
+  end
+
   def update_videos
     videos_from_regex.each do |video|
       video.series = self

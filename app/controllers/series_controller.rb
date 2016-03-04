@@ -51,6 +51,14 @@ class SeriesController < ApplicationController
     end
   end
 
+  def channels_from_regex
+    @series = Series.new
+    @series.user = current_user
+    @series.regex = params[:regex]
+
+    render json: { channel_ids: @series.channels_from_regex.collect(&:id) }
+  end
+
   def next_video
     series = Series.find(params[:id])
     @video = series.next_video
