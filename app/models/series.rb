@@ -5,7 +5,7 @@ class Series < ActiveRecord::Base
   has_many :channels, through: :series_channels
 
   def next_video
-    videos.where(watched: false).order(:created_at).first
+    videos.where(watched: false).order(:published_at).first
   end
 
   def videos_from_regex

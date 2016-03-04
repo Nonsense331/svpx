@@ -27,7 +27,7 @@
 %h2 Other Videos
 .channels
   -@channels.each do |channel|
-    -videos = channel.videos.where(series_id: nil, watched: false).order('created_at DESC').limit(5)
+    -videos = channel.videos.where(series_id: nil, watched: false).order("published_at DESC").limit(5)
     -if videos.count > 0
       .channel-container{data: {id: channel.id}}
         .handle

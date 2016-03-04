@@ -51,6 +51,7 @@ class Youtube
           video = Video.where(youtube_id: item["contentDetails"]["upload"]["videoId"], user_id: @user.id).first_or_create
           video.title = item["snippet"]["title"]
           video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
+          video.published_at = item["snippet"]["publishedAt"]
           video.channel = channel
           if channel.music
             max = [channel.videos.maximum(:plays), 1].max
