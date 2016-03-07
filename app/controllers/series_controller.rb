@@ -10,6 +10,7 @@ class SeriesController < ApplicationController
   def create
     series = Series.new(series_params)
     series.user = current_user
+    series.order = (current_user.series.maximum(:order) || 0) + 1
     series.save!
 
     series.update_videos
