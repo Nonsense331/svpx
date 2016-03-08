@@ -37,7 +37,6 @@ class Series < ActiveRecord::Base
   def self.check_video(video)
     return if video.title.blank? || video.series_id
     Series.where(user_id: video.user_id).each do |series|
-      binding.pry if series.id == 131
       next if series.regex.blank?
       next if series.channels.any? && !series.channels.include?(video.channel)
       if video.title =~ Regexp.new(series.regex)
