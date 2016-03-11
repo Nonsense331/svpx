@@ -1,6 +1,6 @@
 class SVPX.MusicPage
   constructor: (video)->
-    @currentNumber = 0
+    @currentNumber = 1
     @youtubeConfig = {
       ytConfig1: null,
       ytConfig2: null
@@ -24,8 +24,7 @@ class SVPX.MusicPage
     return ytconfig
 
   getCurrentYoutubeConfig: =>
-    othernumber = if @currentNumber == 1 then 2 else 1
-    return @getYoutubeConfig(othernumber)
+    return @getYoutubeConfig(@currentNumber)
 
   getOtherYoutubeConfig: =>
     othernumber = if @currentNumber == 1 then 2 else 1
