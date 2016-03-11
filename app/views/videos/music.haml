@@ -4,15 +4,18 @@
     .button.hate Hate
     .button.love{class: "#{@video.love ? 'has-love' : ''}"} Love
 
+  .clear-div
+
   %div
     Plays:
-    .plays 0
+    .plays= @video.plays || 0
+    Channel:
+    .channel-title= @video.channel.title
 
-  .clear-div
   #player-wrapper1.player
   #player-wrapper2.player
 
   :javascript
-    new SVPX.MusicPage("#{@video.youtube_id}");
+    new SVPX.MusicPage(#{@video.to_json});
 - else
   You don't have any music videos!

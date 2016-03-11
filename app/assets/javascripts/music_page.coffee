@@ -2,52 +2,58 @@ class SVPX.MusicPage
   constructor: (video)->
     @currentNumber = 0
     @youtubeConfig = {
-      ytPlayer1Loaded: false,
-      ytPlayer2Loaded: false,
-      yt1State: null,
-      yt2State: null,
-      ytplayer1: null,
-      ytplayer2: null,
-      yt1love: false,
-      yt2love: false,
-      yt1plays: 0,
-      yt2plays: 0,
-      yt1video: null,
-      yt2video: null
+      ytConfig1: null,
+      ytConfig2: null
     }
     google.setOnLoadCallback =>
-      @makeVideoPlayer(video, 1)
+      @getYoutubeConfig(1).video = video
+      @makeVideoPlayer(1)
     @initListeners()
+
+  getYoutubeConfig: (number) =>
+    ytconfig = @youtubeConfig["ytConfig#{number}"]
+    return ytconfig if ytconfig
+    ytconfig = {
+      playerLoaded: false,
+      state: null,
+      player: null,
+      video: null
+    }
+    @youtubeConfig["ytConfig#{number}"] = ytconfig
+
+    return ytconfig
+
+  getCurrentYoutubeConfig: =>
+    othernumber = if @currentNumber == 1 then 2 else 1
+    return @getYoutubeConfig(othernumber)
+
+  getOtherYoutubeConfig: =>
+    othernumber = if @currentNumber == 1 then 2 else 1
+    return @getYoutubeConfig(othernumber)
 
   initListeners: =>
     $('#player-wrapper1').show()
     $(window).on 'keydown', @onKeyPress
     $('.skip').on 'click', =>
       return if @currentNumber == 0
-      othernumber = if @currentNumber == 1 then 2 else 1
-      @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
+      @getCurrentYoutubeConfig().player.pauseVideo()
       @incrementPlays()
-      @youtubeConfig["ytplayer#{othernumber}"].playVideo()
+      @getOtherYoutubeConfig().player.playVideo()
       return true
 
     $('.hate').on 'click', =>
       return if @currentNumber == 0
       $.ajax
-        url: "/hate_video"
-        data:
-          video_id: @youtubeConfig["yt#{@currentNumber}video"]
-      othernumber = if @currentNumber == 1 then 2 else 1
-      @youtubeConfig["ytplayer#{@currentNumber}"].pauseVideo()
-      @youtubeConfig["ytplayer#{othernumber}"].playVideo()
+        url: "/videos/#{@getCurrentYoutubeConfig().video.id}/hate"
+      @getCurrentYoutubeConfig().player.pauseVideo()
+      @getOtherYoutubeConfig().player.playVideo()
       return true
 
     $('.love').on 'click', =>
       return if @currentNumber == 0
       $('.love').toggleClass('has-love')
       $.ajax
-        url: "/love_video"
-        data:
-          video_id: @youtubeConfig["yt#{@currentNumber}video"]
+        url: "/videos/#{@getCurrentYoutubeConfig().video.id}/love"
         failure: ->
           $('.love').toggleClass('has-love')
       return true
@@ -56,110 +62,95 @@ class SVPX.MusicPage
   onKeyPress: (ev) =>
     if ev.keyCode == 32 #space
       ev.preventDefault()
-      if @youtubeConfig["yt1State"] == YT.PlayerState.PLAYING
-        if @youtubeConfig["ytplayer1"].getPlayerState() == YT.PlayerState.PLAYING
-          @youtubeConfig["ytplayer1"].pauseVideo()
+      ytConfig = @getCurrentYoutubeConfig()
+      if ytConfig.state == YT.PlayerState.PLAYING
+        if ytConfig.player.getPlayerState() == YT.PlayerState.PLAYING
+          ytConfig.player.pauseVideo()
         else
-          @youtubeConfig["ytplayer1"].playVideo()
-      else if @youtubeConfig["yt2State"] == YT.PlayerState.PLAYING
-        if @youtubeConfig["ytplayer2"].getPlayerState() == YT.PlayerState.PLAYING
-          @youtubeConfig["ytplayer2"].pauseVideo()
-        else
-          @youtubeConfig["ytplayer2"].playVideo()
+          ytConfig.player.playVideo()
       else
-        @youtubeConfig["ytplayer1"].playVideo()
+        ytConfig.player.playVideo()
     return true
 
   onStateChange: (state, number) =>
     othernumber = if number == 1 then 2 else 1
-    ytplayer = "ytplayer#{number}"
-    otherytplayer = "ytplayer#{othernumber}"
-    ytPlayerLoaded = "ytPlayer#{number}Loaded"
-    $ytelement = $("#player-wrapper#{number}")
-    ytState = "yt#{number}State"
-    ytlove = "yt#{number}love"
-    ytotherlove = "yt#{othernumber}love"
-    ytplays = "yt#{number}plays"
-    ytotherplays = "yt#{othernumber}plays"
-    ytvideo = "yt#{number}video"
-    if @youtubeConfig[ytState] == YT.PlayerState.BUFFERING
-      @youtubeConfig[ytplayer].pauseVideo()
-      @youtubeConfig[ytplayer].unMute()
-      @youtubeConfig[ytState] = YT.PlayerState.CUED
+    ytConfig = @getYoutubeConfig(number)
+    ytOtherConfig = @getYoutubeConfig(othernumber)
+    if ytConfig.state == YT.PlayerState.BUFFERING
+      ytConfig.player.pauseVideo()
+      ytConfig.player.unMute()
+      ytConfig.state = YT.PlayerState.CUED
     else
-      if state == YT.PlayerState.BUFFERING && @youtubeConfig[ytState] != YT.PlayerState.PLAYING
-        @youtubeConfig[ytState] = YT.PlayerState.BUFFERING
+      if state == YT.PlayerState.BUFFERING && ytConfig.state != YT.PlayerState.PLAYING
+        ytConfig.state = YT.PlayerState.BUFFERING
       if state == YT.PlayerState.PLAYING || state == YT.PlayerState.ENDED
-        if @youtubeConfig[ytState] != state
-          @youtubeConfig[ytState] = state
+        if ytConfig.state != state
+          ytConfig.state = state
           if state == YT.PlayerState.PLAYING
             @currentNumber = number
-            $('.love').toggleClass('has-love', @youtubeConfig[ytlove])
-            $('.plays').html(@youtubeConfig[ytplays])
+            $('.love').toggleClass('has-love', ytConfig.video.love)
+            $('.plays').html(ytConfig.video.plays)
+            $('.channel-title').html(ytConfig.video.channel_title)
             $("#player-wrapper#{othernumber}").hide()
             $("#player-wrapper#{number}").show()
             $(window).focus()
             $.ajax
-              url: "/random_video"
+              url: "/videos/random"
               data:
-                video_id: @youtubeConfig[ytvideo]
+                video_id: ytConfig.video.id
               success: (data) =>
-                @youtubeConfig[ytotherlove] = data.love
-                @youtubeConfig[ytotherplays] = data.plays
-                @makeVideoPlayer(data.video, othernumber)
+                ytOtherConfig.video = data.video
+                @makeVideoPlayer(othernumber)
           else if state == YT.PlayerState.ENDED
             @incrementPlays()
-            @youtubeConfig[otherytplayer].playVideo()
+            ytOtherConfig.player.playVideo()
 
-  makeVideoPlayer: (video, number) ->
+  makeVideoPlayer: (number) ->
     othernumber = if number == 1 then 2 else 1
-    ytplayer = "ytplayer#{number}"
-    otherytplayer = "ytplayer#{othernumber}"
-    ytPlayerLoaded = "ytPlayer#{number}Loaded"
+    ytConfig = @getYoutubeConfig(number)
+    ytOtherConfig = @getYoutubeConfig(othernumber)
     $ytelement = $("#player-wrapper#{number}")
-    ytState = "yt#{number}State"
-    ytvideo = "yt#{number}video"
-    @youtubeConfig[ytvideo] = video
-    if !@youtubeConfig[ytPlayerLoaded]
+    ytplayer = "ytplayer#{number}"
+    if !ytConfig.playerLoaded
       player_wrapper = $ytelement
       player_wrapper.append('<div id="' + ytplayer + '"><p>Loading player...</p></div>')
 
-      @youtubeConfig[ytplayer] = new YT.Player(ytplayer, {
-        videoId: video
+      ytConfig.player = new YT.Player(ytplayer, {
+        videoId: ytConfig.video.youtube_id
         playerVars: {
           wmode: 'opaque'
           autoplay: 0
           modestbranding: 1
           fs: 0
           allowfullscreen: false
+          iv_load_policy: 3
         }
         events: {
           'onReady': =>
-            @youtubeConfig[ytPlayerLoaded] = true
-            @youtubeConfig[ytplayer].mute()
-            @youtubeConfig[ytplayer].playVideo()
+            ytConfig.playerLoaded = true
+            ytConfig.player.mute()
+            ytConfig.player.playVideo()
           'onError': (errorCode) =>
             $.ajax
-              url: "/hate_video"
-              data:
-                video_id: @youtubeConfig[ytvideo]
+              url: "/videos/#{ytConfig.video.id}/hate"
             $.ajax
-              url: "/random_video"
+              url: "/videos/random"
+              data:
+                video_id: ytConfig.video.id
               success: (data) =>
-                @makeVideoPlayer(data.video, number)
+                ytConfig.video = data.video
+                @makeVideoPlayer(number)
           'onStateChange': (data) =>
             state = data.data
             @onStateChange(state, number)
         }
       })
     else
-      @youtubeConfig[ytState] = YT.PlayerState.UNSTARTED
-      @youtubeConfig[ytplayer].loadVideoById(video)
-      @youtubeConfig[ytplayer].mute()
-      @youtubeConfig[ytplayer].playVideo()
+      ytConfig.state = YT.PlayerState.UNSTARTED
+      ytConfig.player.loadVideoById(ytConfig.video.youtube_id)
+      ytConfig.player.mute()
+      ytConfig.player.playVideo()
 
   incrementPlays: () ->
     $.ajax
-      url: "/increment_plays"
-      data:
-        video_id: @youtubeConfig["yt#{@currentNumber}video"]
+      url: "/videos/#{@getCurrentYoutubeConfig().video.id}/increment_plays"

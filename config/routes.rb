@@ -8,11 +8,6 @@ Svpx::Application.routes.draw do
   get 'channels', controller: 'home'
   get 'update_subscriptions', controller: 'home'
   get 'update_activities', controller: 'home'
-  get 'music', controller: 'home'
-  get 'random_video', controller: 'home'
-  get 'hate_video', controller: 'home'
-  get 'love_video', controller: 'home'
-  get 'increment_plays', controller: 'home'
 
   resources :series do
     post :videos_from_regex, on: :collection
@@ -21,7 +16,16 @@ Svpx::Application.routes.draw do
   end
 
   resources :videos, except: [:new, :create, :edit, :update] do
-    get :watched, on: :member
+    member do
+      get :watched
+      get :hate
+      get :love
+      get :increment_plays
+    end
+    collection do
+      get :music
+      get :random
+    end
   end
 
   resources :channels do
