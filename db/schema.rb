@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304162802) do
+ActiveRecord::Schema.define(version: 20160516212056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,17 +52,18 @@ ActiveRecord::Schema.define(version: 20160304162802) do
 
   create_table "videos", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "youtube_id",   limit: 255
-    t.boolean  "watched",                  default: false, null: false
-    t.string   "title",        limit: 255
-    t.string   "thumbnail",    limit: 255
+    t.string   "youtube_id",    limit: 255
+    t.boolean  "watched",                   default: false, null: false
+    t.string   "title",         limit: 255
+    t.string   "thumbnail",     limit: 255
     t.integer  "series_id"
     t.integer  "channel_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "love",                     default: false, null: false
-    t.integer  "plays",                    default: 0,     null: false
+    t.boolean  "love",                      default: false, null: false
+    t.integer  "plays",                     default: 0,     null: false
     t.datetime "published_at"
+    t.integer  "music_counter"
   end
 
 end

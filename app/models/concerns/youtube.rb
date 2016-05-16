@@ -54,8 +54,8 @@ class Youtube
           video.published_at = item["snippet"]["publishedAt"]
           video.channel = channel
           if channel.music
-            max = [channel.videos.maximum(:plays), 1].max
-            video.plays = max - 1
+            max = [channel.videos.maximum(:music_counter), 1].max
+            video.music_counter = max - 1
           end
           video.save!
 

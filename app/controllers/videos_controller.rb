@@ -39,6 +39,7 @@ class VideosController < ApplicationController
   def increment_plays
     @video = Video.find(params[:id])
     @video.plays += 1
+    @video.music_counter += 1
     @video.save!
 
     render :show
@@ -50,11 +51,11 @@ class VideosController < ApplicationController
     if id
       videos = videos.where("videos.id != ?", id)
     end
-    min_plays = videos.where(plays: videos.minimum(:plays))
-    if min_plays.count > 0
-      return min_plays.sample
+    min_music_counter = videos.where(music_counter: videos.minimum(:music_counter))
+    if min_music_counter.count > 0
+      return min_music_counter.sample
     else
-      return videos.where(plays: videos.minimum(:plays)+1).sample
+      return videos.where(music_counter: videos.minimum(:music_counter)+1).sample
     end
   end
 end
