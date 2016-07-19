@@ -5,9 +5,13 @@ class User < ActiveRecord::Base
 
   def self.update_activities
     User.all.each do |user|
-      youtube = Youtube.new(user)
+      begin
+        youtube = Youtube.new(user)
 
-      youtube.update_activities
+        youtube.update_activities
+      rescue StandardError => e
+
+      end
     end
   end
 end
