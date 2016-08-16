@@ -13,6 +13,7 @@ Svpx::Application.routes.draw do
     post :videos_from_regex, on: :collection
     get :channels_from_regex, on: :collection
     get :next_video, on: :member
+    get :load_videos, on: :member
   end
 
   resources :videos, except: [:new, :create, :edit, :update] do

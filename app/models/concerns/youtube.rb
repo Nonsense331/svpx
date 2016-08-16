@@ -48,18 +48,7 @@ class Youtube
       body = JSON.parse response.body
       body["items"].each do |item|
         if item["contentDetails"] && item["contentDetails"]["upload"]
-          video = Video.where(youtube_id: item["contentDetails"]["upload"]["videoId"], user_id: @user.id).first_or_create
-          video.title = item["snippet"]["title"]
-          video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
-          video.published_at = item["snippet"]["publishedAt"]
-          video.channel = channel
-          if channel.music
-            max = [channel.videos.maximum(:music_counter), 1].max
-            video.music_counter = max - 1
-          end
-          video.save!
-
-          Series.check_video(video)
+          load_video(item["contentDetails"]["upload"]["videoId"], item, channel)
         end
       end
     end
@@ -113,11 +102,7 @@ class Youtube
     end
 
     videos.each do |item|
-      video = Video.where(user_id: @user.id, youtube_id: item["id"]["videoId"]).first_or_create
-      video.title = item["snippet"]["title"]
-      video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
-      video.channel = channel
-      video.save!
+      load_video(item["id"]["videoId"], item, channel)
     end
   end
 
@@ -133,5 +118,57 @@ class Youtube
     end
     response = execute_api_call(api.search.list, parameters)
     JSON.parse response.body
+  end
+
+  def load_videos_for_series(series)
+    query = series.videos.first.title.match(Regexp.new(series.regex))[0]
+
+    series.channels.each do |channel|
+      body = search(query, channel)
+      videos = body["items"]
+      nextPageToken = body["nextPageToken"]
+
+      while nextPageToken
+        body = get_video_page(channel, nextPageToken)
+        videos += body["items"]
+        nextPageToken = body["nextPageToken"]
+      end
+
+      videos.each do |item|
+        load_video(item["id"]["videoId"], item, channel)
+      end
+    end
+  end
+
+  def search(q, channel, pageToken=nil)
+    parameters = {
+      'part' => 'snippet',
+      'maxResults' => 50,
+      'q' => q,
+      'type' => 'video'
+    }
+    if pageToken
+      parameters['pageToken'] = pageToken
+    end
+    if channel
+      parameters['channelId'] = channel.youtube_id
+    end
+    response = execute_api_call(api.search.list, parameters)
+    JSON.parse response.body
+  end
+
+  def load_video(youtube_id, item, channel)
+    video = Video.where(youtube_id: youtube_id, user_id: @user.id).first_or_create
+    video.title = item["snippet"]["title"]
+    video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
+    video.published_at = item["snippet"]["publishedAt"]
+    video.channel = channel
+    if channel.music
+      max = [channel.videos.maximum(:music_counter), 1].max
+      video.music_counter = max - 1
+    end
+    video.save!
+
+    Series.check_video(video)
   end
 end

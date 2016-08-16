@@ -50,6 +50,10 @@ class SVPX.HomePage
       channelId = $(e.target).closest('.channel-container').data('id')
       window.location.replace("/channels/#{channelId}")
 
+    $('.series').on 'click', '.handle', (e)->
+      seriesId = $(e.target).closest('.video-container').data('id')
+      window.location.replace("/series/#{seriesId}")
+
     setTimeout ->
       location.reload()
     , 1000 * 5 * 60

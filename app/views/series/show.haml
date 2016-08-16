@@ -1,0 +1,7 @@
+%h1= @series.title
+- if @series.channels.any?
+  = link_to "Grab all related videos from youtube", load_videos_series_path(@series)
+  %br
+-@series.videos.ordered.each do |video|
+  .video-container
+    =render partial: 'home/video', locals: {video: video}

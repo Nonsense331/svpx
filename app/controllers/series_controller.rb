@@ -7,6 +7,10 @@ class SeriesController < ApplicationController
     end
   end
 
+  def show
+    @series = Series.find(params[:id])
+  end
+
   def create
     series = Series.new(series_params)
     series.user = current_user
@@ -15,7 +19,7 @@ class SeriesController < ApplicationController
 
     series.update_videos
 
-    redirect_to "/home"
+    redirect_to series
   end
 
   def destroy
@@ -67,6 +71,17 @@ class SeriesController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def load_videos
+    series = Series.find(params[:id])
+
+    youtube = Youtube.new(current_user, session['auth_hash'])
+    youtube.load_videos_for_series(series)
+
+    series.update_videos
+
+    redirect_to series
   end
 
   private
