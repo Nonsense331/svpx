@@ -8,7 +8,7 @@ class ChannelsController < ApplicationController
       videos = current_user.videos.joins(:channel).where(channels: {music: true})
       max = [videos.maximum(:music_counter), 1].max
       videos.each do |video|
-        video.update(:music_counter, max - 1)
+        video.update(music_counter: max - 1)
       end
     end
 
