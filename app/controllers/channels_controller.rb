@@ -4,6 +4,14 @@ class ChannelsController < ApplicationController
     channel.attributes = channel_params
     channel.save!
 
+    if channel.music
+      videos = current_user.videos.joins(:channel).where(channels: {music: true})
+      max = [videos.maximum(:music_counter), 1].max
+      videos.each do |video|
+        video.update(:music_counter, max - 1)
+      end
+    end
+
     respond_to do |format|
       format.js do
         render json: {success: true}
