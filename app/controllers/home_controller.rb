@@ -25,7 +25,6 @@ class HomeController < ApplicationController
     youtube = Youtube.new(current_user, session['auth_hash'])
 
     youtube.update_subscriptions
-    youtube.update_activities
 
     redirect_to action: :channels
   end
