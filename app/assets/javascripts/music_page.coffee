@@ -90,6 +90,7 @@ class SVPX.MusicPage
             $('.love').toggleClass('has-love', ytConfig.video.love)
             $('.plays').html(ytConfig.video.plays)
             $('.channel-title').html(ytConfig.video.channel_title)
+            $('.video-title').html(ytConfig.video.title)
             $("#player-wrapper#{othernumber}").hide()
             $("#player-wrapper#{number}").show()
             $(window).focus()

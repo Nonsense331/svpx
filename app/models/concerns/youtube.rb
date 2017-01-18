@@ -65,11 +65,11 @@ class Youtube
     end
 
     channel_ids = subscriptions.collect{|c| c["snippet"]["resourceId"]["channelId"]}
-    @user.channels.each do |channel|
-      unless channel_ids.include? channel.youtube_id
-        channel.destroy
-      end
-    end
+    # @user.channels.each do |channel|
+    #   unless channel_ids.include? channel.youtube_id
+    #     channel.destroy
+    #   end
+    # end
 
     subscriptions.each do |item|
       channel = Channel.where(user_id: @user.id, youtube_id: item["snippet"]["resourceId"]["channelId"]).first_or_create

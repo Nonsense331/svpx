@@ -51,11 +51,12 @@ class VideosController < ApplicationController
     if id
       videos = videos.where("videos.id != ?", id)
     end
-    min_music_counter = videos.where(music_counter: videos.minimum(:music_counter))
+    counter = videos.minimum(:music_counter) || -1
+    min_music_counter = videos.where(music_counter: counter)
     if min_music_counter.count > 0
       return min_music_counter.sample
     else
-      return videos.where(music_counter: videos.minimum(:music_counter)+1).sample
+      return videos.where(music_counter: counter).sample
     end
   end
 end
