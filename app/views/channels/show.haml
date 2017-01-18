@@ -4,11 +4,12 @@
   = label_tag do
     = check_box_tag "music", "1", @channel.music
     Music Channel
-  = link_to "Get All Videos", get_all_videos_channel_path(@channel)
+  .get-all-link= link_to "Get All Videos", "#"
 -videos = @channel.videos.where(series_id: nil, watched: false).order("published_at DESC")
--videos.each do |video|
-  .video-container
-    =render partial: 'home/video', locals: {video: video}
+.videos
+  -videos.each do |video|
+    .video-container
+      =render partial: 'home/video', locals: {video: video}
 
 :javascript
   new SVPX.ChannelShowPage("#{@channel.id}");

@@ -90,20 +90,16 @@ class Youtube
     JSON.parse response.body
   end
 
-  def get_all_videos(channel)
-    body = get_video_page(channel)
+  def get_all_videos(channel, nextPageToken=nil)
+    body = get_video_page(channel, nextPageToken)
     videos = body["items"]
     nextPageToken = body["nextPageToken"]
-
-    while nextPageToken
-      body = get_video_page(channel, nextPageToken)
-      videos += body["items"]
-      nextPageToken = body["nextPageToken"]
-    end
 
     videos.each do |item|
       load_video(item["id"]["videoId"], item, channel)
     end
+
+    videos, nextPageToken
   end
 
   def get_video_page(channel, pageToken=nil)

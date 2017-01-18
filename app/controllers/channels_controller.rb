@@ -27,9 +27,9 @@ class ChannelsController < ApplicationController
     channel = Channel.find(params[:id])
 
     youtube = Youtube.new(current_user, session['auth_hash'])
-    youtube.get_all_videos(channel)
+    videos, next_link = youtube.get_all_videos(channel, params[:next_link])
 
-    redirect_to action: :show
+    render json: {success: true, next_link: next_link}
   end
 
   private

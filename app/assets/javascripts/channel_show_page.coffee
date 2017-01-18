@@ -12,3 +12,15 @@ class SVPX.ChannelShowPage
           channel:
             music: $(ev.target).val()
         success: (data)->
+
+    $('.get-all-link').on 'click', @getNextVideos
+
+  getNextVideos: (nextLink) =>
+    $.ajax
+      url: "/channels/#{@channel_id}/get_all_videos",
+      method: 'put',
+      data:
+        next_link: nextLink
+      success: (data)=>
+        if data.next_link
+          @getNextVideos(data.next_link)
