@@ -99,7 +99,7 @@ class Youtube
       load_video(item["id"]["videoId"], item, channel)
     end
 
-    videos, nextPageToken
+    return videos, nextPageToken
   end
 
   def get_video_page(channel, pageToken=nil)
