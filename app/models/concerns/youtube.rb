@@ -106,7 +106,7 @@ class Youtube
     parameters = {
       'part' => 'snippet',
       'channelId' => channel.youtube_id,
-      'maxResults' => 50,
+      'maxResults' => 10,
       'type' => 'video'
     }
     if pageToken
