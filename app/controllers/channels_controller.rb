@@ -29,7 +29,7 @@ class ChannelsController < ApplicationController
     youtube = Youtube.new(current_user, session['auth_hash'])
     videos, next_link = youtube.get_all_videos(channel, params[:next_link])
 
-    render json: {success: true, next_link: next_link}
+    render json: {success: true, next_link: next_link, count: videos.count}
   end
 
   private

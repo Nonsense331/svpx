@@ -14,7 +14,20 @@ class SVPX.ChannelShowPage
         success: (data)->
 
     $('.get-all-link').on 'click', (ev) =>
-      @getNextVideos(null)
+      @startFetch()
+
+  startFetch: =>
+    @fetchCount = 0
+    $('.fetch-text').html('Fetching...')
+    $('.fetching').show()
+    @getNextVideos(null)
+
+  updateFetch: =>
+    $('.fetch-count').html("Fetched #{@fetchCount}")
+
+  endFetch: =>
+    $('.fetch-count').html("Fetched #{@fetchCount}")
+    $('.fetch-text').html('Done Fetching!')
 
   getNextVideos: (nextLink) =>
     $.ajax
@@ -23,5 +36,9 @@ class SVPX.ChannelShowPage
       data:
         next_link: nextLink
       success: (data)=>
+        @fetchCount += data.count
         if data.next_link
           @getNextVideos(data.next_link)
+          @updateFetch()
+        else
+          @endFetch()

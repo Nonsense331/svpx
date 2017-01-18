@@ -5,6 +5,9 @@
     = check_box_tag "music", "1", @channel.music
     Music Channel
   .get-all-link= link_to "Get All Videos", "#"
+  .fetching{style: "display: none"}
+    .fetch-text Fetching...
+    .fetch-count
 -videos = @channel.videos.where(series_id: nil, watched: false).order("published_at DESC")
 .videos
   -videos.each do |video|
