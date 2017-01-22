@@ -14,6 +14,7 @@ class SVPX.ChannelShowPage
         success: (data)->
 
     $('.get-all-link').on 'click', (ev) =>
+      ev.preventDefault()
       @startFetch()
 
   startFetch: =>
