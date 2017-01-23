@@ -91,6 +91,7 @@ class SVPX.MusicPage
             $('.plays').html(ytConfig.video.plays)
             $('.channel-title').html(ytConfig.video.channel_title)
             $('.video-title').html(ytConfig.video.title)
+            $('.video-date').html(ytConfig.video.published_at_display)
             $("#player-wrapper#{othernumber}").hide()
             $("#player-wrapper#{number}").show()
             $(window).focus()

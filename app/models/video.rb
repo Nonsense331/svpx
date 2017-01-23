@@ -5,4 +5,8 @@ class Video < ActiveRecord::Base
 
   scope :unwatched, -> {where(watched: false)}
   scope :ordered, -> {order(:published_at)}
+
+  def published_at_display
+    published_at.strftime("%D")
+  end
 end
