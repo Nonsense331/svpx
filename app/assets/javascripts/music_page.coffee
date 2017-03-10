@@ -17,7 +17,8 @@ class SVPX.MusicPage
       playerLoaded: false,
       state: null,
       player: null,
-      video: null
+      video: null,
+      initializing: null
     }
     @youtubeConfig["ytConfig#{number}"] = ytconfig
 
@@ -72,16 +73,21 @@ class SVPX.MusicPage
     return true
 
   onStateChange: (state, number) =>
+    console.log("Player #{number}: State #{state}")
     othernumber = if number == 1 then 2 else 1
     ytConfig = @getYoutubeConfig(number)
+    # console.log("YTState #{ytConfig.state}")
     ytOtherConfig = @getYoutubeConfig(othernumber)
-    if ytConfig.state == YT.PlayerState.BUFFERING
-      ytConfig.player.pauseVideo()
-      ytConfig.player.unMute()
-      ytConfig.state = YT.PlayerState.CUED
+    if ytConfig.initializing
+      if state == YT.PlayerState.PLAYING
+        ytConfig.player.pauseVideo()
+        ytConfig.player.unMute()
+      if state == YT.PlayerState.PAUSED
+        ytConfig.state = YT.PlayerState.CUED
+        ytConfig.initializing = false
+      if state == YT.PlayerState.CUED
+        ytConfig.player.playVideo()
     else
-      if state == YT.PlayerState.BUFFERING && ytConfig.state != YT.PlayerState.PLAYING
-        ytConfig.state = YT.PlayerState.BUFFERING
       if state == YT.PlayerState.PLAYING || state == YT.PlayerState.ENDED
         if ytConfig.state != state
           ytConfig.state = state
@@ -106,10 +112,11 @@ class SVPX.MusicPage
             @incrementPlays()
             ytOtherConfig.player.playVideo()
 
+    return true
+
   makeVideoPlayer: (number) ->
-    othernumber = if number == 1 then 2 else 1
     ytConfig = @getYoutubeConfig(number)
-    ytOtherConfig = @getYoutubeConfig(othernumber)
+    ytConfig.initializing = true
     $ytelement = $("#player-wrapper#{number}")
     ytplayer = "ytplayer#{number}"
     if !ytConfig.playerLoaded
@@ -148,10 +155,8 @@ class SVPX.MusicPage
       })
     else
       ytConfig.state = YT.PlayerState.UNSTARTED
-      ytConfig.player.loadVideoById(ytConfig.video.youtube_id)
+      ytConfig.player.cueVideoById(ytConfig.video.youtube_id)
       ytConfig.player.mute()
-      ytConfig.player.playVideo()
-
   incrementPlays: () ->
     $.ajax
       url: "/videos/#{@getCurrentYoutubeConfig().video.id}/increment_plays"
