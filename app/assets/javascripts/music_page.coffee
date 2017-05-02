@@ -98,8 +98,12 @@ class SVPX.MusicPage
             $('.channel-title').html(ytConfig.video.channel_title)
             $('.video-title').html(ytConfig.video.title)
             $('.video-date').html(ytConfig.video.published_at_display)
-            $("#player-wrapper#{othernumber}").hide()
-            $("#player-wrapper#{number}").show()
+            if ytConfig.playerLoaded
+              ytConfig.player.getIframe().setAttribute('height', 360)
+              ytConfig.player.getIframe().setAttribute('width', 640)
+            if ytOtherConfig.playerLoaded
+              ytOtherConfig.player.getIframe().setAttribute('height', 1)
+              ytOtherConfig.player.getIframe().setAttribute('width', 1)
             $(window).focus()
             $.ajax
               url: "/videos/random"
@@ -116,6 +120,8 @@ class SVPX.MusicPage
 
   makeVideoPlayer: (number) ->
     ytConfig = @getYoutubeConfig(number)
+    othernumber = if number == 1 then 2 else 1
+    ytOtherConfig = @getYoutubeConfig(othernumber)
     ytConfig.initializing = true
     $ytelement = $("#player-wrapper#{number}")
     ytplayer = "ytplayer#{number}"
@@ -124,6 +130,8 @@ class SVPX.MusicPage
       player_wrapper.append('<div id="' + ytplayer + '"><p>Loading player...</p></div>')
 
       ytConfig.player = new YT.Player(ytplayer, {
+        height: '1',
+        width: '1'
         videoId: ytConfig.video.youtube_id
         playerVars: {
           wmode: 'opaque'
@@ -138,6 +146,9 @@ class SVPX.MusicPage
             ytConfig.playerLoaded = true
             ytConfig.player.mute()
             ytConfig.player.playVideo()
+            if !ytOtherConfig.playerLoaded
+              ytConfig.player.getIframe().setAttribute('height', 360)
+              ytConfig.player.getIframe().setAttribute('width', 640)
           'onError': (errorCode) =>
             $.ajax
               url: "/videos/#{ytConfig.video.id}/hate"
@@ -157,6 +168,9 @@ class SVPX.MusicPage
       ytConfig.state = YT.PlayerState.UNSTARTED
       ytConfig.player.cueVideoById(ytConfig.video.youtube_id)
       ytConfig.player.mute()
+      if ytOtherConfig.playerLoaded
+        ytConfig.player.getIframe().setAttribute('height', 1)
+        ytConfig.player.getIframe().setAttribute('width', 1)
   incrementPlays: () ->
     $.ajax
       url: "/videos/#{@getCurrentYoutubeConfig().video.id}/increment_plays"
