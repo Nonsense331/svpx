@@ -18,6 +18,6 @@
   #player-wrapper2.player
 
   :javascript
-    new SVPX.MusicPage(#{@video.to_json});
+    new SVPX.MusicPage(#{raw @video.to_json});
 - else
   You don't have any music videos!
