@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.3.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5.1'
+gem 'rails', '4.2.7.1'
 
 gem 'pg'
 gem 'puma'
@@ -12,6 +12,7 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass-rails'
+gem 'nokogiri', '~> 1.8.1'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
