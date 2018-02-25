@@ -14,7 +14,7 @@ class HomeController < ApplicationController
       youtube.update_activities
     end
 
-    @series_videos = current_user.videos.includes(:series).select("DISTINCT ON (series_id) *").where.not(series_id: nil).order('series_id, published_at').sort_by{ |s| s.series.order }
+    @series_videos = current_user.videos.includes(:series).select("DISTINCT ON (series_id) *").where.not(series_id: nil).where(watched: false).order('series_id, published_at').sort_by{ |s| s.series.order }
     @channels = current_user.channels.includes(:videos).order(:order)
   end
 
