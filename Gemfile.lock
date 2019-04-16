@@ -158,7 +158,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    puma (2.16.0)
+    puma (3.12.1)
     rack (1.6.8)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -256,5 +256,8 @@ DEPENDENCIES
   twitch (~> 0.1.0)
   uglifier
 
+RUBY VERSION
+   ruby 2.6.1p33
+
 BUNDLED WITH
-   1.11.2
+   1.17.2
