@@ -1,70 +1,69 @@
-require 'google/api_client'
+require 'google/apis/youtube_v3'
+require 'google/api_client/client_secrets'
+
 class Youtube
   def initialize(user, auth_hash=nil)
+    Google::Apis::ClientOptions.default.application_name = 'SVPX'
+    Google::Apis::ClientOptions.default.application_version = '1.0.0'
     @user = user
     @auth_hash = auth_hash
-  end
+    file = Tempfile.new(["secrets", ".json"])
+    file.write <<~EOF
+{
+  "web": {
+    "client_id": "#{ENV["GOOGLE_CLIENT_ID"]}",
+    "client_secret": "#{ENV["GOOGLE_CLIENT_SECRET"]}",
+    "redirect_uris": ["https://svpx.heroku.com/auth/google_oauth2", "http://lvh.me:3000/auth/google_oauth2"],
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://accounts.google.com/o/oauth2/token"
+  }
+}
+EOF
+    file.rewind
 
-  def execute_api_call(method, params)
-    response = api_client.execute(api_method: method, parameters: params)
-    if response.body["error"]
-      if response.body["error"]["code"] == 401
-        #unauthorized
-        raise "unauthorized"
+    client_secrets = Google::APIClient::ClientSecrets.load(file.path)
+    @authorization = client_secrets.to_authorization
+    @authorization.update_token!(refresh_token: @user.refresh_token) if @user.refresh_token
+    @authorization.scope = "http://gdata.youtube.com"
+
+    if @auth_hash
+      expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
+      if expires_at && expires_at > Time.now
+        @authorization.update_token!(access_token: @auth_hash.credentials.token)
       end
-    end
-
-    response
-  end
-
-  def api_client
-    @client ||= begin
-      client = Google::APIClient.new(application_name: 'SVPX', application_version: '1.0.0')
-      client.authorization.client_id = ENV["GOOGLE_CLIENT_ID"]
-      client.authorization.client_secret = ENV["GOOGLE_CLIENT_SECRET"]
-      client.authorization.scope = "http://gdata.youtube.com"
-      client.authorization.update_token!(refresh_token: @user.refresh_token) if @user.refresh_token
-      if @auth_hash
-        expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
-        if expires_at && expires_at > Time.now
-          client.authorization.update_token!(access_token: @auth_hash.credentials.token)
-        end
-      else
-        client.authorization.grant_type = "refresh_token"
-        client.authorization.fetch_access_token!
-      end
-
-      client
+    else
+      @authorization.grant_type = "refresh_token"
+      @authorization.fetch_access_token!
     end
   end
 
   def api
-    @api ||= api_client.discovered_api('youtube', 'v3')
+    @api ||= Google::Apis::YoutubeV3::YouTubeService.new
   end
 
   def update_activities
     @user.channels.each do |channel|
-      response = execute_api_call(api.activities.list, {'part' => 'contentDetails, snippet', 'channelId' => channel.youtube_id})
-      body = JSON.parse response.body
-      body["items"].each do |item|
-        if item["contentDetails"] && item["contentDetails"]["upload"]
-          load_video(item["contentDetails"]["upload"]["videoId"], item, channel)
+      params = {channel_id: channel.youtube_id}
+      response = api.list_activities('content_details, snippet', get_parameters(params))
+      response.items.each do |item|
+        if item.content_details && item.content_details.upload
+          load_video(item.content_details.upload.video_id, item, channel)
         end
       end
     end
   end
 
   def update_subscriptions
-    body = get_subscription_page()
-    subscriptions = body["items"]
-    nextPageToken = body["nextPageToken"]
-    while nextPageToken
-      body = get_subscription_page(nextPageToken)
-      subscriptions += body["items"]
-      nextPageToken = body["nextPageToken"]
+    response = get_subscription_page()
+    subscriptions = response.items
+    next_page_token  = response.next_page_token
+    while next_page_token
+      response = get_subscription_page(next_page_token )
+      subscriptions += response.items
+      next_page_token  = response.next_page_token
     end
 
-    channel_ids = subscriptions.collect{|c| c["snippet"]["resourceId"]["channelId"]}
+    channel_ids = subscriptions.collect{|c| c.snippet.resource_id.channel_id}
     # @user.channels.each do |channel|
     #   unless channel_ids.include? channel.youtube_id
     #     channel.destroy
@@ -72,92 +71,86 @@ class Youtube
     # end
 
     subscriptions.each do |item|
-      channel = Channel.where(user_id: @user.id, youtube_id: item["snippet"]["resourceId"]["channelId"]).first_or_create
-      channel.title = item["snippet"]["title"]
+      channel = Channel.where(user_id: @user.id, youtube_id: item.snippet.resource_id.channel_id).first_or_create
+      channel.title = item.snippet.title
       channel.save!
     end
   end
 
-  def get_subscription_page(pageToken=nil)
-    parameters = {
-      'part' => 'snippet',
-      'mine' => true
+  def get_subscription_page(page_token=nil)
+    params = {
+      mine: true
     }
-    if pageToken
-      parameters['pageToken'] = pageToken
+    if page_token
+      params[:page_token] = page_token
     end
-    response = execute_api_call(api.subscriptions.list, parameters)
-    JSON.parse response.body
+    response = api.list_subscriptions('snippet', get_parameters(params))
   end
 
-  def get_all_videos(channel, nextPageToken=nil)
-    body = get_video_page(channel, nextPageToken)
-    videos = body["items"]
-    nextPageToken = body["nextPageToken"]
+  def get_all_videos(channel, next_page_token =nil)
+    response = get_video_page(channel, next_page_token )
+    videos = response.items
+    next_page_token  = response.next_page_token
 
     videos.each do |item|
-      load_video(item["id"]["videoId"], item, channel)
+      load_video(item.id.video_id, item, channel)
     end
 
-    return videos, nextPageToken
+    return videos, next_page_token
   end
 
-  def get_video_page(channel, pageToken=nil)
-    parameters = {
-      'part' => 'snippet',
-      'channelId' => channel.youtube_id,
-      'maxResults' => 10,
-      'type' => 'video'
+  def get_video_page(channel, page_token=nil)
+    params = {
+      channel_id: channel.youtube_id,
+      maxResults: 10,
+      type: 'video'
     }
-    if pageToken
-      parameters['pageToken'] = pageToken
+    if page_token
+      params[:page_token] = page_token
     end
-    response = execute_api_call(api.search.list, parameters)
-    JSON.parse response.body
+    response = api.list_searches('snippet', get_parameters(params))
   end
 
   def load_videos_for_series(series)
     query = series.videos.first.title.match(Regexp.new(series.regex))[0]
 
     series.channels.each do |channel|
-      body = search(query, channel)
-      videos = body["items"]
-      nextPageToken = body["nextPageToken"]
+      response = search(query, channel)
+      videos = response.items
+      next_page_token  = response.next_page_token
 
-      while nextPageToken
-        body = get_video_page(channel, nextPageToken)
-        videos += body["items"]
-        nextPageToken = body["nextPageToken"]
+      while next_page_token
+        response = get_video_page(channel, next_page_token )
+        videos += response.items
+        next_page_token  = response.next_page_token
       end
 
       videos.each do |item|
-        load_video(item["id"]["videoId"], item, channel)
+        load_video(item.id.video_id, item, channel)
       end
     end
   end
 
-  def search(q, channel, pageToken=nil)
-    parameters = {
-      'part' => 'snippet',
-      'maxResults' => 50,
-      'q' => q,
-      'type' => 'video'
+  def search(q, channel, page_token=nil)
+    params = {
+      maxResults: 50,
+      q: q,
+      type: 'video'
     }
-    if pageToken
-      parameters['pageToken'] = pageToken
+    if page_token
+      params[:page_token] = page_token
     end
     if channel
-      parameters['channelId'] = channel.youtube_id
+      params[:channel_id] = channel.youtube_id
     end
-    response = execute_api_call(api.search.list, parameters)
-    JSON.parse response.body
+    response = api.list_searches('snippet', get_parameters(params))
   end
 
   def load_video(youtube_id, item, channel)
     video = Video.where(youtube_id: youtube_id, user_id: @user.id).first_or_create
-    video.title = item["snippet"]["title"]
-    video.thumbnail = item["snippet"]["thumbnails"]["default"]["url"]
-    video.published_at = item["snippet"]["publishedAt"]
+    video.title = item.snippet.title
+    video.thumbnail = item.snippet.thumbnails.default.url
+    video.published_at = item.snippet.published_at
     video.channel = channel
     if channel.music
       max = [channel.videos.maximum(:music_counter), 1].max
@@ -166,5 +159,11 @@ class Youtube
     video.save!
 
     Series.check_video(video)
+  end
+
+  def get_parameters(params={})
+    params[:options] = { authorization: @authorization }
+
+    params
   end
 end

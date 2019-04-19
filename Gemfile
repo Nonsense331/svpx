@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.4.6'
+ruby '2.6.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.11'
@@ -17,7 +17,7 @@ gem 'nokogiri', '~> 1.8.1'
 gem 'figaro'
 gem 'omniauth-google-oauth2'
 gem 'omniauth', '~> 1.3.2'
-gem 'google-api-client', '~> 0.8.2', require: 'google/api_client'
+gem 'google-api-client', '~> 0.9.1'
 gem 'twitch', '~> 0.1.0'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
