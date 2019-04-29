@@ -13,7 +13,7 @@ class Youtube
   "web": {
     "client_id": "#{ENV["GOOGLE_CLIENT_ID"]}",
     "client_secret": "#{ENV["GOOGLE_CLIENT_SECRET"]}",
-    "redirect_uris": ["https://svpx.heroku.com/auth/google_oauth2", "http://lvh.me:3000/auth/google_oauth2"],
+    "redirect_uris": ["https://svpx.herokuapp.com/auth/google_oauth2", "http://lvh.me:3000/auth/google_oauth2"],
     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
     "token_uri": "https://accounts.google.com/o/oauth2/token"
   }
@@ -102,7 +102,7 @@ EOF
   def get_video_page(channel, page_token=nil)
     params = {
       channel_id: channel.youtube_id,
-      maxResults: 10,
+      max_results: 10,
       type: 'video'
     }
     if page_token
@@ -133,7 +133,7 @@ EOF
 
   def search(q, channel, page_token=nil)
     params = {
-      maxResults: 50,
+      max_results: 50,
       q: q,
       type: 'video'
     }
