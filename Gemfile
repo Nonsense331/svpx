@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.6.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.11'
+gem 'rails', '4.2.11.1'
 
 gem 'pg'
 gem 'puma'
@@ -12,7 +12,7 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass-rails'
-gem 'nokogiri', '~> 1.8.1'
+gem 'nokogiri', '~> 1.10.3'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
@@ -31,4 +31,5 @@ end
 
 group :development do
   gem 'pry'
+  gem 'bundler-audit'
 end
