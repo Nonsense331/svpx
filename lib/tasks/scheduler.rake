@@ -4,6 +4,9 @@ task :update_activities => :environment do
   User.update_activities
   puts "done."
   puts "Deleting old videos..."
-  Video.where(watched: true).where("created_at < ?", Time.now - 1.month).destroy_all
+  videos = Video.order(created_at: :asc).where(watched: true).where("created_at < ?", Time.now - 1.month)
+  if videos.count > 5
+    videos[0..-4].each(&:destroy!)
+  end
   puts "done."
 end

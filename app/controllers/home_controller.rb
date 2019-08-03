@@ -5,15 +5,6 @@ class HomeController < ApplicationController
   end
 
   def home
-    if current_user.channels.empty?
-      youtube = Youtube.new(current_user, session['auth_hash'])
-      youtube.update_subscriptions
-    end
-    if current_user.videos.empty?
-      youtube = Youtube.new(current_user, session['auth_hash'])
-      youtube.update_activities
-    end
-
     @series_videos = current_user.videos.includes(:series).select("DISTINCT ON (series_id) *").where.not(series_id: nil).where(watched: false).order('series_id, published_at').sort_by{ |s| s.series.order }
     @channels = current_user.channels.includes(:videos).order(:order)
   end
