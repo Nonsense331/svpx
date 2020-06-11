@@ -5,7 +5,7 @@ class SVPX.MusicPage
       ytConfig1: null,
       ytConfig2: null
     }
-    google.setOnLoadCallback =>
+    window.YT.ready =>
       @getYoutubeConfig(1).video = video
       @makeVideoPlayer(1)
     @initListeners()
