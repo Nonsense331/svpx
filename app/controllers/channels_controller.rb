@@ -33,6 +33,13 @@ class ChannelsController < ApplicationController
     render json: {success: true, next_link: next_link, count: videos.count}
   end
 
+  def destroy
+    channel = Channel.find(params[:id])
+    channel.destroy
+
+    redirect_to "/"
+  end
+
   private
 
   def channel_params

@@ -1,6 +1,8 @@
 %h2
   =@channel.title
 %div
+  = link_to "Delete", channel_path(@channel), method: :delete
+  %br
   = label_tag do
     = check_box_tag "music", "1", @channel.music
     Music Channel
