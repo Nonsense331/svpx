@@ -12,7 +12,7 @@ gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass-rails'
-gem 'nokogiri', '~> 1.10.3'
+gem 'nokogiri', '~> 1.11.4'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
