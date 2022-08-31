@@ -16,7 +16,7 @@ gem 'nokogiri'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
-gem 'omniauth', '~> 1.3.2'
+gem 'omniauth', '~> 1.9.2'
 gem 'google-api-client', '~> 0.9.1'
 gem 'twitch', '~> 0.1.0'
 
