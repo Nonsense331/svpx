@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
-  skip_before_filter :ensure_authorization, only: :welcome
+  skip_before_action :ensure_authorization, only: :welcome
   def welcome
-    redirect_to "/auth/google_oauth2"
   end
 
   def home

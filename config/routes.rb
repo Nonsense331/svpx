@@ -1,4 +1,4 @@
-Svpx::Application.routes.draw do
+Rails.application.routes.draw do
   root 'home#welcome'
 
   get '/auth/:provider/callback', to: 'sessions#create'

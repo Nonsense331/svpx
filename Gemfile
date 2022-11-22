@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
-ruby '2.6.5'
+ruby '3.1.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.11.3'
+gem 'rails', '7.0.4'
 
-gem 'pg', '< 1'
+gem 'pg'
 gem 'puma', '< 5'
 gem 'sass-rails'
 gem 'uglifier'
@@ -13,17 +13,19 @@ gem 'jquery-rails'
 gem 'haml-rails'
 gem 'compass-rails'
 gem 'nokogiri'
+gem 'sorted_set'
+gem 'bootsnap'
 
 gem 'figaro'
 gem 'omniauth-google-oauth2'
-gem 'omniauth', '~> 1.3.2'
-gem 'google-api-client', '~> 0.9.1'
-gem 'twitch', '~> 0.1.0'
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
+gem 'google-api-client'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
-gem 'newrelic_rpm'
+# gem 'newrelic_rpm'
 
 group :production do
   gem 'rails_12factor'

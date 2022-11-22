@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :ensure_authorization
+  skip_before_action :ensure_authorization
   def create
     @user = User.where(uid: auth_hash.uid).first_or_create
     @user.email = auth_hash.info.email
