@@ -153,8 +153,7 @@ EOF
     video.published_at = item.snippet.published_at
     video.channel = channel
     if channel.music
-      max = [channel.videos.maximum(:music_counter), 1].max
-      video.music_counter = max - 1
+      video.music_counter = 1
     end
     video.save!
 
