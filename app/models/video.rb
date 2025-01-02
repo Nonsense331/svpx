@@ -1,7 +1,7 @@
 class Video < ActiveRecord::Base
   belongs_to :user
-  belongs_to :series
-  belongs_to :channel
+  belongs_to :series, optional: true
+  belongs_to :channel, optional: true
 
   scope :unwatched, -> {where(watched: false)}
   scope :ordered, -> {order(:published_at)}
