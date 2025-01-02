@@ -39,7 +39,9 @@ class VideosController < ApplicationController
   def increment_plays
     @video = Video.find(params[:id])
     @video.plays += 1
-    @video.music_counter += 1
+    videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
+    counter = (videos.maximum(:music_counter) || 1)
+    @video.music_counter = counter
     @video.save!
 
     render :show
