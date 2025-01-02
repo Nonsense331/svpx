@@ -29,7 +29,7 @@ EOF
     if @auth_hash
       expires_at = Time.at(@auth_hash["credentials"]["expires_at"]) rescue nil
       if expires_at && expires_at > Time.now
-        @authorization.update_token!(access_token: @auth_hash.credentials.token)
+        @authorization.update_token!(access_token: @auth_hash["credentials"]["token"])
       end
     else
       @authorization.grant_type = "refresh_token"
@@ -44,7 +44,7 @@ EOF
   def update_activities
     @user.channels.each do |channel|
       params = {channel_id: channel.youtube_id}
-      response = api.list_activities('content_details, snippet', get_parameters(params))
+      response = api.list_activities('content_details, snippet', **get_parameters(params))
       response.items.each do |item|
         if item.content_details && item.content_details.upload
           load_video(item.content_details.upload.video_id, item, channel)
@@ -84,7 +84,7 @@ EOF
     if page_token
       params[:page_token] = page_token
     end
-    response = api.list_subscriptions('snippet', get_parameters(params))
+    response = api.list_subscriptions('snippet', **get_parameters(params))
   end
 
   def get_all_videos(channel, next_page_token =nil)
@@ -108,7 +108,7 @@ EOF
     if page_token
       params[:page_token] = page_token
     end
-    response = api.list_searches('snippet', get_parameters(params))
+    response = api.list_searches('snippet', **get_parameters(params))
   end
 
   def load_videos_for_series(series)
@@ -143,7 +143,7 @@ EOF
     if channel
       params[:channel_id] = channel.youtube_id
     end
-    response = api.list_searches('snippet', get_parameters(params))
+    response = api.list_searches('snippet', **get_parameters(params))
   end
 
   def load_video(youtube_id, item, channel)
