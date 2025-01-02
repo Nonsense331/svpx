@@ -3,4 +3,7 @@ class Channel < ActiveRecord::Base
   has_many :videos, dependent: :destroy
   has_many :series_channels, dependent: :destroy
   has_many :series, through: :series_channels
+
+  scope :music, -> {where(music: true)}
+  scope :normal, -> {where(music: false)}
 end
