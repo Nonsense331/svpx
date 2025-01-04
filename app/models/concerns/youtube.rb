@@ -88,7 +88,7 @@ EOF
   end
 
   def get_all_videos(channel, next_page_token =nil)
-    response = get_video_page(channel, next_page_token )
+    response = get_video_page(channel, next_page_token, max_results: 100)
     videos = response.items
     next_page_token  = response.next_page_token
 
@@ -99,10 +99,10 @@ EOF
     return videos, next_page_token
   end
 
-  def get_video_page(channel, page_token=nil)
+  def get_video_page(channel, page_token=nil, max_results: 10)
     params = {
       channel_id: channel.youtube_id,
-      max_results: 10,
+      max_results: max_results,
       type: 'video'
     }
     if page_token
@@ -120,7 +120,7 @@ EOF
       next_page_token  = response.next_page_token
 
       while next_page_token
-        response = get_video_page(channel, next_page_token )
+        response = get_video_page(channel, next_page_token)
         videos += response.items
         next_page_token  = response.next_page_token
       end
