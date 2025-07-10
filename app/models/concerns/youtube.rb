@@ -88,15 +88,46 @@ EOF
   end
 
   def get_all_videos(channel, next_page_token =nil)
-    response = get_video_page(channel, next_page_token, max_results: 100)
-    videos = response.items
-    next_page_token  = response.next_page_token
+    playlist_id = get_channel_playlist_id(channel)
+    videos, next_page_token = get_playlist_video_page(playlist_id, next_page_token)
 
     videos.each do |item|
-      load_video(item.id.video_id, item, channel)
+      load_video(item.snippet.resource_id.video_id, item, channel)
     end
 
     return videos, next_page_token
+  end
+
+  def get_playlist_video_page(playlist_id, page_token=nil)
+    params = {
+      fields: 'nextPageToken,items/snippet/resourceId,items/snippet/title,items/snippet/publishedAt,items/snippet/thumbnails/default/url',
+      playlist_id: playlist_id,
+      max_results: 50
+    }
+    if page_token
+      params[:page_token] = page_token
+    end
+    response = api.list_playlist_items('snippet', **get_parameters(params))
+
+    videos = []
+
+    response.items.each do |item|
+      if item.snippet.resource_id.kind == 'youtube#video'
+        videos << item
+      end
+    end
+
+    return videos, response.next_page_token
+  end
+
+  def get_channel_playlist_id(channel)
+    params = {
+      id: channel.youtube_id,
+      fields: 'items/contentDetails/relatedPlaylists/uploads',
+      max_results: 1
+    }
+    response = api.list_channels('contentDetails', **get_parameters(params))
+    response.items.first.content_details.related_playlists.uploads
   end
 
   def get_video_page(channel, page_token=nil, max_results: 10)
