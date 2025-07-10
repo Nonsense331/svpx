@@ -22,7 +22,7 @@ class VideosController < ApplicationController
 
   def hate
     @video = Video.find(params[:id])
-    @video.watched = true
+    @video.hate = true
     @video.save!
 
     render :show
@@ -39,7 +39,7 @@ class VideosController < ApplicationController
   def increment_plays
     @video = Video.find(params[:id])
     @video.plays += 1
-    videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
+    videos = music_videos
     counter = (videos.maximum(:music_counter) || 1)
     @video.music_counter = counter
     @video.save!
@@ -49,7 +49,7 @@ class VideosController < ApplicationController
 
   private
   def get_random_video(id=nil)
-    videos = Video.joins(:channel).unwatched.where(channels:{user_id: current_user.id, music: true})
+    videos = music_videos
     if id
       videos = videos.where("videos.id != ?", id)
     end
@@ -61,5 +61,9 @@ class VideosController < ApplicationController
     else
       return videos.where(music_counter: counter + 1).sample
     end
+  end
+
+  def music_videos
+    Video.joins(:channel).where(hate: false).where(channels:{user_id: current_user.id, music: true})
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_22_201455) do
+ActiveRecord::Schema[7.0].define(version: 2025_07_10_200748) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -62,6 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_22_201455) do
     t.integer "plays", default: 0, null: false
     t.datetime "published_at", precision: nil
     t.integer "music_counter"
+    t.boolean "hate", default: false, null: false
   end
 
 end

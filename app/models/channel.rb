@@ -5,5 +5,5 @@ class Channel < ActiveRecord::Base
   has_many :series, through: :series_channels
 
   scope :music, -> {where(music: true)}
-  scope :normal, -> {where.not(music: true)}
+  scope :normal, -> {where("music IS NOT TRUE")}
 end
