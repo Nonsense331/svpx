@@ -102,7 +102,7 @@ EOF
     params = {
       fields: 'nextPageToken,items/snippet/resourceId,items/snippet/title,items/snippet/publishedAt,items/snippet/thumbnails/default/url',
       playlist_id: playlist_id,
-      max_results: 50
+      max_results: 20
     }
     if page_token
       params[:page_token] = page_token
